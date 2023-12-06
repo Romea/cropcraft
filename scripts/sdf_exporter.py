@@ -6,6 +6,22 @@ from bpy.types import Operator
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
+def export_mesh(filepath):
+    ''' Exports the dae file and its associated textures of the selected objects '''
+    bpy.ops.wm.collada_export(
+        filepath=filepath,
+        check_existing=False,
+        filter_collada=True,
+        filter_folder=True,
+        apply_modifiers=True,
+        export_global_forward_selection='X',
+        export_global_up_selection='Z',
+        filemode=8,
+        use_object_instantiation=False,
+        limit_precision=True,
+        selected=True,
+    )
+
 
 def export_sdf(prefix_path):
     ''' Exports model.dae of the scene with textures, its corresponding model.sdf file, and a
@@ -19,20 +35,13 @@ def export_sdf(prefix_path):
     model_name = 'my_model'
     meshes_folder_prefix = 'meshes/'
 
-    # Exports the dae file and its associated textures
-    bpy.ops.wm.collada_export(
-        filepath=prefix_path + meshes_folder_prefix + dae_filename,
-        check_existing=False,
-        filter_collada=True,
-        filter_folder=True,
-        apply_modifiers=True,
-        export_global_forward_selection='X',
-        export_global_up_selection='Z',
-        filemode=8,
-        use_object_instantiation=False,
-        limit_precision=True,
-        selected=True,
-    )
+    for object in bpy.data.collections['export'].all_objects.values():
+        bpy.ops.object.select_all(action='DESELECT')
+        object.select_set(True)
+        print(bpy.context.selected_objects)
+        export_mesh(prefix_path + meshes_folder_prefix + object.name)
+
+    return None
 
     # objects = bpy.context.selected_objects
     objects = bpy.context.selectable_objects
@@ -185,32 +194,6 @@ def export_sdf(prefix_path):
     config_file = open(prefix_path + model_config_filename, "w")
     config_file.write(reparsed.toprettyxml(indent="  "))
     config_file.close()
-
-
-# UI Handling
-class OT_TestOpenFilebrowser(Operator, ImportHelper):
-    bl_idname = "test.open_filebrowser"
-    bl_label = "Save"
-
-    directory: bpy.props.StringProperty(name="Outdir Path")
-
-    def execute(self, context):
-        """Do the export with the selected file."""
-
-        if not os.path.isdir(self.directory):
-            print(self.directory + " is not a directory!")
-        else:
-            print("exporting to directory: " + self.directory)
-            export_sdf(self.directory)
-        return {'FINISHED'}
-
-
-def register():
-    bpy.utils.register_class(OT_TestOpenFilebrowser)
-
-
-def unregister():
-    bpy.utils.unregister_class(OT_TestOpenFilebrowser)
 
 
 if __name__ == "__main__":
