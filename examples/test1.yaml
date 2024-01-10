@@ -1,0 +1,17 @@
+output_type: gazebo
+field:
+  bed_width: 1.5
+  beds:
+    bed1:  
+      plant_type: maize
+      plant_height: .3
+      plants_count: 100
+      rows_count: 3
+      beds_count: 3
+      offset: [0, 0, 0]
+
+  noise:
+    position: .008
+    tilt: .05
+    missing: .15
+    scale: .10
