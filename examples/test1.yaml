@@ -1,10 +1,13 @@
 output_type: gazebo
+
 field:
   bed_width: 1.5
   beds:
     bed1:  
       plant_type: maize
       plant_height: .3
+      plant_distance: .14
+      row_distance: .35
       plants_count: 100
       rows_count: 3
       beds_count: 3
