@@ -9,13 +9,15 @@ import subprocess
 @click.option('-d', '--output-dir', default='.', type=click.Path(writable=True))
 def main(config_file, output_dir):
     project_path = os.path.dirname(os.path.realpath(__file__))
-    entrypoint_path = project_path + '/src/blender_entrypoint.py'
+    entrypoint_path = os.path.join(project_path, 'core', 'blender_entrypoint.py')
     config_path = os.path.realpath(config_file)
     output_path = os.path.realpath(output_dir)
+    base_path = os.path.join(project_path, 'assets', 'base.blend')
 
     subprocess.run([
         'blender',
-        '--background',
+        base_path,
+        # '--background',
         '--python',
         entrypoint_path,
         '--',

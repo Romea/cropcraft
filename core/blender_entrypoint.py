@@ -1,5 +1,6 @@
 import sys
 import importlib
+import os
 
 if not importlib.util.find_spec('yaml'):
     import pip
@@ -7,6 +8,11 @@ if not importlib.util.find_spec('yaml'):
 
 importlib.invalidate_caches()
 yaml = importlib.import_module('yaml')
+
+this_module_dir = os.path.realpath(os.path.dirname(__file__))
+sys.path.append(this_module_dir)
+
+from beds import create_beds
 
 
 def load_config(filename: str):
@@ -21,7 +27,7 @@ def main(argv: list):
     output_dir = args[1] if len(args) >= 2 else '.'
 
     cfg = load_config(config_file)
-    print(cfg)
+    create_beds(cfg)
 
 
 if __name__ == '__main__':
