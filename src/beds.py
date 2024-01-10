@@ -1,4 +1,5 @@
 import bpy
 
 
-def create_beds(cfg: dict)
+def create_beds(cfg: dict):
+    pass

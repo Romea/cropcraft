@@ -10,7 +10,8 @@ yaml = importlib.import_module('yaml')
 
 
 def load_config(filename: str):
-    cfg = yaml.safe_load(filename)
+    with open(filename, 'r') as file:
+        cfg = yaml.safe_load(file.read())
     return cfg
 
 

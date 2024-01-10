@@ -13,7 +13,15 @@ def main(config_file, output_dir):
     config_path = os.path.realpath(config_file)
     output_path = os.path.realpath(output_dir)
 
-    subprocess.run(['blender', '-b', '-P', entrypoint_path, '--', config_path, output_path])
+    subprocess.run([
+        'blender',
+        '--background',
+        '--python',
+        entrypoint_path,
+        '--',
+        config_path,
+        output_path,
+    ])
 
 
 if __name__ == '__main__':
