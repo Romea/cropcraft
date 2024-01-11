@@ -18,6 +18,9 @@ class PlantGroup:
     def __hash__(self):
         return hash((self.type, self.name))
 
+    def full_name(self):
+        return f"{self.type}_{self.name}"
+
 
 
 @dataclass

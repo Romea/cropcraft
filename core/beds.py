@@ -11,6 +11,7 @@ class Beds:
     def __init__(self, field: dict):
         self.field = field
         self.bed_plant_groups = {}
+        self.plant_collections = {}
 
     def load_plants(self):
         groups = set()
@@ -28,22 +29,22 @@ class Beds:
 
         plants_collection = bpy.data.collections['plants']
 
-        scene_layer_coll = bpy.context.view_layer.layer_collection
+        view_layer = bpy.context.view_layer
+        scene_layer_coll = view_layer.layer_collection
         plants_layer_coll = scene_layer_coll.children['resources'].children['plants']
 
         for group in groups:
-            collection = bpy.data.collections.new(group.name)
+            full_name = group.full_name()
+            collection = bpy.data.collections.new(full_name)
             plants_collection.children.link(collection)
-            bpy.context.view_layer.active_layer_collection = plants_layer_coll.children[group.name]
+            view_layer.active_layer_collection = plants_layer_coll.children[full_name]
 
-            objects = []
             for model in group.models:
-                object = bpy.ops.wm.obj_import(
+                bpy.ops.wm.obj_import(
                     filepath=os.path.join('assets', 'plants', group.type, model.filename),
                     up_axis='Z',
                     forward_axis='X',
                 )
-                objects.append(object)
 
     def create_bed(self, name: str, bed: dict):
         plants_count = bed['plants_count']
