@@ -12,7 +12,7 @@ yaml = importlib.import_module('yaml')
 this_module_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.insert(0, this_module_dir)
 
-from core import beds, base
+import core
 
 
 def load_config(filename: str):
@@ -27,11 +27,12 @@ def main(argv: list):
     output_dir = args[1] if len(args) >= 2 else '.'
 
     cfg = load_config(config_file)
-    field = cfg['field']
 
-    base.create_blender_context()
-    beds.load_plants(field)
-    beds.create_beds(field)
+    core.base.create_blender_context()
+    
+    beds = core.beds.Beds(cfg['field'])
+    beds.load_plants()
+    beds.create_beds()
 
 
 if __name__ == '__main__':

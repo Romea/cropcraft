@@ -12,7 +12,8 @@ def main(config_file, output_dir):
     entrypoint_path = os.path.join(project_path, 'core', 'blender_entrypoint.py')
     config_path = os.path.realpath(config_file)
     output_path = os.path.realpath(output_dir)
-    base_path = os.path.join(project_path, 'assets', 'base.blend')
+
+    os.chdir(project_path)
 
     subprocess.run([
         'blender',
