@@ -16,7 +16,6 @@ def main(config_file, output_dir):
 
     subprocess.run([
         'blender',
-        base_path,
         # '--background',
         '--python',
         entrypoint_path,

@@ -9,10 +9,10 @@ if not importlib.util.find_spec('yaml'):
 importlib.invalidate_caches()
 yaml = importlib.import_module('yaml')
 
-this_module_dir = os.path.realpath(os.path.dirname(__file__))
-sys.path.append(this_module_dir)
+this_module_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.insert(0, this_module_dir)
 
-from beds import create_beds
+from core import beds, base
 
 
 def load_config(filename: str):
@@ -27,7 +27,11 @@ def main(argv: list):
     output_dir = args[1] if len(args) >= 2 else '.'
 
     cfg = load_config(config_file)
-    create_beds(cfg)
+    field = cfg['field']
+
+    base.create_blender_context()
+    beds.load_plants(field)
+    beds.create_beds(field)
 
 
 if __name__ == '__main__':

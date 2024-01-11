@@ -1,5 +1,43 @@
 import bpy
 import itertools
+import os
+import sys
+
+from .plant_model import get_plant_group
+
+
+def load_plants(field: dict):
+    groups = set()
+    for _, bed in field['beds'].items():
+        group = get_plant_group(bed['plant_type'], bed['plant_height'])
+
+        if not group:
+            msg = "Error: plant type '{}' and height '{}' is unknown.".format(
+                bed['plant_type'], bed['plant_height'])
+            print(msg, file=sys.stderr)
+            continue
+        
+        groups.add(group)
+
+    plants_collection = bpy.data.collections['plants']
+
+    scene_layer_coll = bpy.context.view_layer.layer_collection
+    plants_layer_coll = scene_layer_coll.children['resources'].children['plants']
+
+    for group in groups:
+        collection = bpy.data.collections.new(group.name)
+        plants_collection.children.link(collection)
+        bpy.context.view_layer.active_layer_collection = plants_layer_coll.children[group.name]
+
+        objects = []
+        for model in group.models:
+            object = bpy.ops.wm.obj_import(
+                filepath=os.path.join('assets', 'plants', group.type, model.filename),
+                up_axis='Z',
+                forward_axis='X',
+            )
+            objects.append(object)
+
 
 
 def create_bed(name: str, bed: dict, field: dict):
@@ -29,11 +67,8 @@ def create_bed(name: str, bed: dict, field: dict):
     return bpy.data.objects.new(name, mesh)
 
 
-def create_beds(cfg: dict):
-    field = cfg['field']
-
-    collection = bpy.data.collections.new('generated')
-    bpy.context.scene.collection.children.link(collection)
+def create_beds(field: dict):
+    collection = bpy.data.collections['generated']
 
     for name, bed in field['beds'].items():
         bed_object = create_bed(name, bed, field)
