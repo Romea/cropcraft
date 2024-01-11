@@ -1,5 +1,7 @@
 import bpy
 
+from . import geometry_nodes
+
 
 def create_collections():
     generated = bpy.data.collections.new('generated')
@@ -15,6 +17,9 @@ def create_collections():
     resources.children.link(plants)
     resources.children.link(weeds)
 
+    resources.hide_viewport = True
+    resources.hide_render = True
+
 
 def remove_all():
     for _, object in bpy.data.objects.items():
@@ -26,3 +31,4 @@ def remove_all():
 def create_blender_context():
     remove_all()
     create_collections()
+    geometry_nodes.create_all_node_group()

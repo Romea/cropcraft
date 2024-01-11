@@ -95,7 +95,7 @@ def crops_node_group():
 	# input scale
 	scale_socket = crops.interface.new_socket(name = "scale", in_out='INPUT', socket_type = 'NodeSocketFloat')
 	scale_socket.subtype = 'NONE'
-	scale_socket.default_value = 0.5
+	scale_socket.default_value = 1.0
 	scale_socket.min_value = -10000.0
 	scale_socket.max_value = 10000.0
 	scale_socket.attribute_domain = 'POINT'

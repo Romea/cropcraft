@@ -11,7 +11,6 @@ class Beds:
     def __init__(self, field: dict):
         self.field = field
         self.bed_plant_groups = {}
-        self.plant_collections = {}
 
     def load_plants(self):
         groups = set()
@@ -70,7 +69,15 @@ class Beds:
         mesh.from_pydata(vertices, edges=[], faces=[])
         mesh.update()
 
-        return bpy.data.objects.new(name, mesh)
+        object = bpy.data.objects.new(name, mesh)
+
+        # add and configure geometry nodes
+        modifier = object.modifiers.new(name, 'NODES')
+        modifier.node_group = bpy.data.node_groups['crops']
+        collection_name = self.bed_plant_groups[name].full_name()
+        modifier["Socket_2"] = bpy.data.collections[collection_name]
+
+        return object
 
     def create_beds(self):
         collection = bpy.data.collections['generated']
