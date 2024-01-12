@@ -2,6 +2,7 @@ import bpy
 import itertools
 import os
 import sys
+import mathutils
 
 from .plant_model import get_plant_group
 
@@ -12,6 +13,7 @@ class Beds:
         self.field = field
         self.bed_plant_groups = {}
         self.cur_bed_offset = 0.
+        self.center_pos = mathutils.Vector()
 
     def load_plants(self):
         groups = set()
@@ -81,6 +83,8 @@ class Beds:
         # increase bed offset for the next bed
         self.cur_bed_offset += beds_count * bed_width
 
+        self.update_center_pos(bed_width, (plants_count - 1) * plant_dist)
+
         return object
 
     def create_beds(self):
@@ -89,3 +93,7 @@ class Beds:
         for name, bed in self.field['beds'].items():
             bed_object = self.create_bed(name, bed)
             collection.objects.link(bed_object)
+
+    def update_center_pos(self, bed_width: float, row_length: float):
+        self.center_pos.x = max(self.center_pos.x, row_length / 2.)
+        self.center_pos.y = (self.cur_bed_offset - bed_width) / 2.

@@ -34,7 +34,9 @@ def main(argv: list):
     beds.load_plants()
     beds.create_beds()
 
-    core.base.create_camera((beds.cur_bed_offset - cfg['field']['bed_width']) / 2.)
+    look_at = beds.center_pos.copy()
+    look_at.x = 6.
+    core.base.create_camera(look_at)
 
 
 if __name__ == '__main__':

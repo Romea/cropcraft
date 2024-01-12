@@ -30,9 +30,8 @@ def remove_all():
         bpy.data.collections.remove(collection)
 
 
-def create_camera(y_offset: float):
-    camera_pos = mathutils.Vector((-10., y_offset, 7.))
-    look_at = mathutils.Vector((5., y_offset, 0.))
+def create_camera(look_at: mathutils.Vector):
+    camera_pos = mathutils.Vector((-10., look_at.y, 7.))
     look_dir = camera_pos - look_at
     look_quaternion = look_dir.to_track_quat('Z', 'Y')
 
