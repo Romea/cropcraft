@@ -1,4 +1,4 @@
-output_enabled: [gazebo, blender]
+output_enabled: [blender]
 output:
   gazebo:
     type: gazebo_model
