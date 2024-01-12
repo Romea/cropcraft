@@ -11,6 +11,7 @@ class Beds:
     def __init__(self, field: dict):
         self.field = field
         self.bed_plant_groups = {}
+        self.cur_bed_offset = 0.
 
     def load_plants(self):
         groups = set()
@@ -58,7 +59,7 @@ class Beds:
         def plant_position(bed_ind, row_ind, plant_ind):
             return [
                 plant_ind * plant_dist,
-                bed_ind * bed_width - row_half_width + row_ind * row_dist,
+                self.cur_bed_offset + bed_ind * bed_width - row_half_width + row_ind * row_dist,
                 0.,
             ]
 
@@ -76,6 +77,9 @@ class Beds:
         modifier.node_group = bpy.data.node_groups['crops']
         collection_name = self.bed_plant_groups[name].full_name()
         modifier["Socket_2"] = bpy.data.collections[collection_name]
+
+        # increase bed offset for the next bed
+        self.cur_bed_offset += beds_count * bed_width
 
         return object
 
