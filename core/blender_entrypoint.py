@@ -38,7 +38,7 @@ def main(argv: list):
     look_at.x = 6.
     core.base.create_camera(look_at)
 
-    core.output.export_from_config(cfg)
+    core.output.export_from_config(cfg, output_dir)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,14 @@
 import sys
+import bpy
+import os
 
 
-def export_blender_file(params: dict):
-    print('export blender file')
+def export_blender_file(params: dict, output_dir: str):
+    filepath = os.path.join(output_dir, params['filename'])
+    bpy.ops.wm.save_as_mainfile(filepath=filepath)
 
 
-def export_gazebo_model(params: dict):
+def export_gazebo_model(params: dict, output_dir: str):
     print('export gazebo model')
 
 
@@ -15,7 +18,7 @@ export_formats = {
 }
 
 
-def export_from_config(cfg: dict):
+def export_from_config(cfg: dict, output_dir: str):
     output_configs = cfg['output']
 
     for output in cfg['output_enabled']:
@@ -31,4 +34,4 @@ def export_from_config(cfg: dict):
                   file=sys.stderr)
             continue
 
-        export_formats[type](output_config)
+        export_formats[type](output_config, output_dir)
