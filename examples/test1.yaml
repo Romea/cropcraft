@@ -7,9 +7,18 @@ field:
       plant_type: maize
       plant_height: .3
       plant_distance: .14
-      row_distance: .35
+      row_distance: .75
       plants_count: 100
-      rows_count: 3
+      rows_count: 2
+      beds_count: 2
+      offset: [0, 0, 0]
+    bed2:  
+      plant_type: bean
+      plant_height: .2
+      plant_distance: .14
+      row_distance: .325
+      plants_count: 100
+      rows_count: 4
       beds_count: 3
       offset: [0, 0, 0]
 

@@ -1,4 +1,6 @@
 import bpy
+from bpy.app.handlers import persistent
+import mathutils
 
 from . import geometry_nodes
 
@@ -17,8 +19,8 @@ def create_collections():
     resources.children.link(plants)
     resources.children.link(weeds)
 
-    resources.hide_viewport = True
-    resources.hide_render = True
+    view_layer = bpy.context.scene.view_layers['ViewLayer']
+    view_layer.layer_collection.children['resources'].hide_viewport = True
 
 
 def remove_all():
@@ -26,6 +28,26 @@ def remove_all():
         bpy.data.objects.remove(object, do_unlink=True)
     for _, collection in bpy.data.collections.items():
         bpy.data.collections.remove(collection)
+
+
+def create_camera(y_offset: float):
+    camera_pos = mathutils.Vector((-10., y_offset, 7.))
+    look_at = mathutils.Vector((5., y_offset, 0.))
+    look_dir = camera_pos - look_at
+    look_quaternion = look_dir.to_track_quat('Z', 'Y')
+
+    camera_data = bpy.data.cameras.new('camera')
+    camera = bpy.data.objects.new('camera', camera_data)
+    camera.location = camera_pos
+    camera.rotation_euler = look_quaternion.to_euler()
+
+    bpy.data.collections['env'].objects.link(camera)
+
+    area = next(area for area in bpy.context.screen.areas if area.type == 'VIEW_3D')
+    region = area.spaces[0].region_3d
+    region.view_location = look_at
+    region.view_distance = look_dir.length - 5.
+    region.view_rotation = look_quaternion
 
 
 def create_blender_context():
