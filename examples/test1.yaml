@@ -1,4 +1,13 @@
-output_type: gazebo
+output_enabled: [gazebo, blender]
+output:
+  gazebo:
+    type: gazebo_model
+    name: test1
+    author: 'Cyrille Pierre'
+
+  blender:
+    type: blender_file
+    filename: test1.blend
 
 field:
   bed_width: 1.5
@@ -12,6 +21,7 @@ field:
       rows_count: 2
       beds_count: 2
       offset: [0, 0, 0]
+
     bed2:  
       plant_type: bean
       plant_height: .2
