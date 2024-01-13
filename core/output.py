@@ -7,6 +7,8 @@ from .sdf_exporter import export_sdf
 
 def export_blender_file(params: dict, output_dir: str):
     filepath = os.path.join(output_dir, params['filename'])
+
+    bpy.ops.file.pack_all()
     bpy.ops.wm.save_as_mainfile(filepath=filepath)
 
 

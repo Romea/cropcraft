@@ -33,8 +33,6 @@ def create_sdf_link(model: ET.Element, object: bpy.types.Object):
     submesh_name = ET.SubElement(submesh, "name")
     submesh_name.text = object.name
 
-    print(f"object active material: {object.active_material}")
-
     # grab diffuse/albedo map
     diffuse_map = None
     if object.active_material and object.active_material.node_tree:

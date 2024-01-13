@@ -48,6 +48,13 @@ class Beds:
                     forward_axis='X',
                 )
 
+    def create_beds(self):
+        collection = bpy.data.collections['generated']
+
+        for name, bed in self.field['beds'].items():
+            bed_object = self.create_bed(name, bed)
+            collection.objects.link(bed_object)
+
     def create_bed(self, name: str, bed: dict):
         plants_count = bed['plants_count']
         rows_count = bed['rows_count']
@@ -68,6 +75,16 @@ class Beds:
         id_tuples = itertools.product(range(beds_count), range(rows_count), range(plants_count))
         vertices = list(map(lambda ids: plant_position(*ids), id_tuples))
 
+        object = self.create_bed_object(vertices, name)
+
+        # increase bed offset for the next bed
+        self.cur_bed_offset += beds_count * bed_width
+
+        self.update_center_pos(bed_width, (plants_count - 1) * plant_dist)
+
+        return object
+
+    def create_bed_object(self, vertices: list, name: str):
         mesh = bpy.data.meshes.new(name)
         mesh.from_pydata(vertices, edges=[], faces=[])
         mesh.update()
@@ -77,22 +94,21 @@ class Beds:
         # add and configure geometry nodes
         modifier = object.modifiers.new(name, 'NODES')
         modifier.node_group = bpy.data.node_groups['crops']
+
         collection_name = self.bed_plant_groups[name].full_name()
-        modifier["Socket_2"] = bpy.data.collections[collection_name]
+        plant_collection = bpy.data.collections[collection_name]
+        modifier["Socket_2"] = plant_collection
 
-        # increase bed offset for the next bed
-        self.cur_bed_offset += beds_count * bed_width
+        # apply plant material to the bed object
+        object.active_material = plant_collection.objects[0].active_material.copy()
 
-        self.update_center_pos(bed_width, (plants_count - 1) * plant_dist)
+        # # copy UVMap from
+        # attrUV = target.data.attributes["UVMap"].data
+        # targetUV = target.data.uv_layers[0].data 
+        # for i, elem in enumerate(targetUV):
+        #     elem.uv = attrUV[i].vector
 
         return object
-
-    def create_beds(self):
-        collection = bpy.data.collections['generated']
-
-        for name, bed in self.field['beds'].items():
-            bed_object = self.create_bed(name, bed)
-            collection.objects.link(bed_object)
 
     def update_center_pos(self, bed_width: float, row_length: float):
         self.center_pos.x = max(self.center_pos.x, row_length / 2.)
