@@ -2,7 +2,7 @@ import sys
 import bpy
 import os
 
-from .sdf_exporter import export_sdf
+from .gazebo import GazeboModel
 
 
 def export_blender_file(params: dict, output_dir: str):
@@ -17,7 +17,9 @@ def export_gazebo_model(params: dict, output_dir: str):
     path = os.path.join(output_dir, name.replace(' ', '_'))
     author = params['author'] if 'author' in params else None
     collection = bpy.data.collections['generated']
-    export_sdf(path, name, collection, author)
+
+    gazebo_model = GazeboModel(path, name, author)
+    gazebo_model.export_sdf(collection)
 
 
 export_formats = {
