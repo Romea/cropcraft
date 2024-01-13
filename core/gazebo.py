@@ -36,8 +36,8 @@ class GazeboModel:
             export_materials=True,
         )
 
-    def export_image(self, name: str, dirname: str):
-        image_path = os.path.join(dirname, name)
+    def export_image(self, name: str):
+        image_path = os.path.join(self.materials_path, name)
 
         if not os.path.exists(image_path):
             image = bpy.data.images[name]
@@ -65,7 +65,7 @@ material {name}
 
 ''')
 
-    def create_sdf_material(self, visual: ET.Element, object: bpy.types.Object, filepath: str):
+    def create_sdf_material(self, visual: ET.Element, object: bpy.types.Object):
         # grab diffuse/albedo map
         diffuse_map = None
         if object.active_material and object.active_material.node_tree:
@@ -77,9 +77,9 @@ material {name}
                     link_node = base_color.links[0].from_node
                     diffuse_map = link_node.image.name
 
-        material_filepath = os.path.join(filepath, object.name + '.material')
+        material_filepath = os.path.join(self.materials_path, object.name + '.material')
 
-        self.export_image(diffuse_map, filepath)
+        self.export_image(diffuse_map)
         self.append_ogre_material(object.name, material_filepath, diffuse_map)
 
         # setup diffuse/specular color
@@ -88,23 +88,17 @@ material {name}
         ET.SubElement(script, 'uri').text = material_filepath
         ET.SubElement(script, 'name').text = object.name
 
-    def create_sdf_link(
-        self,
-        model: ET.Element,
-        object: bpy.types.Object,
-        meshes_path: str,
-        material_path: str,
-    ):
-        mesh_uri = os.path.join(meshes_path, object.name + '.obj')
+    def create_sdf_link(self, object: bpy.types.Object):
+        mesh_uri = os.path.join(self.meshes_path, object.name + '.obj')
 
-        link = ET.SubElement(model, "link", attrib={"name": object.name})
+        link = ET.SubElement(self.model, "link", attrib={"name": object.name})
 
         visual = ET.SubElement(link, "visual", attrib={"name": object.name})
         geometry = ET.SubElement(visual, "geometry")
         mesh = ET.SubElement(geometry, "mesh")
         ET.SubElement(mesh, "uri").text = mesh_uri
 
-        self.create_sdf_material(visual, object, material_path)
+        self.create_sdf_material(visual, object)
 
         # sdf collision tags
         collision = ET.SubElement(link, "collision", attrib={"name": "collision"})
@@ -118,39 +112,39 @@ material {name}
         ET.SubElement(contact, "collide_without_contact_bitmask").text = '0x01'
         ET.SubElement(contact, "collide_bitmask").text = '0x00'
 
-    def create_config(self, model_name: str, sdf_filename: str, author_name: str):
+    def create_config(self):
         model = ET.Element('model')
         name = ET.SubElement(model, 'name')
-        name.text = model_name
+        name.text = self.name
         version = ET.SubElement(model, 'version')
         version.text = "1.0"
-        sdf_tag = ET.SubElement(model, "sdf", attrib={"sdf": "1.8"})
-        sdf_tag.text = sdf_filename
+        sdf_tag = ET.SubElement(model, "sdf", attrib={"sdf": "1.7"})
+        sdf_tag.text = self.sdf_filename
 
         author = ET.SubElement(model, 'author')
         name = ET.SubElement(author, 'name')
-        name.text = author_name
+        name.text = self.author
 
         return model
 
-    def export_sdf(self, collection: bpy.types.Collection):
-
+    def add_collection(self, collection: bpy.types.Collection):
+        bpy.ops.object.select_all(action='DESELECT')
         for object in collection.all_objects.values():
             if object.type == 'MESH':
-                bpy.ops.object.select_all(action='DESELECT')
                 object.select_set(True)
                 self.export_mesh(os.path.join(self.meshes_path, object.name))
-                self.create_sdf_link(self.model, object, self.meshes_path, self.materials_path)
+                self.create_sdf_link(object)
+                object.select_set(False)
 
-        # sdf write to file
+    def export_sdf(self):
         xml_string = ET.tostring(self.sdf, encoding='unicode')
         reparsed = minidom.parseString(xml_string)
 
         with open(os.path.join(self.model_path, self.sdf_filename), "w") as sdf_file:
             sdf_file.write(reparsed.toprettyxml(indent="  "))
 
-        # create config file
-        model = self.create_config(self.name, self.sdf_filename, self.author)
+    def export_config(self):
+        model = self.create_config()
         xml_string = ET.tostring(model, encoding='unicode')
         reparsed = minidom.parseString(xml_string)
 

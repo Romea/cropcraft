@@ -19,7 +19,9 @@ def export_gazebo_model(params: dict, output_dir: str):
     collection = bpy.data.collections['generated']
 
     gazebo_model = GazeboModel(path, name, author)
-    gazebo_model.export_sdf(collection)
+    gazebo_model.add_collection(collection)
+    gazebo_model.export_sdf()
+    gazebo_model.export_config()
 
 
 export_formats = {
