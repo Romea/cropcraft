@@ -12,6 +12,7 @@ output:
 
 field:
   bed_width: 1.57
+
   beds:
     bed1:  
       plant_type: maize

@@ -1,7 +1,6 @@
 import bpy
 import itertools
 import os
-import sys
 import mathutils
 
 from .plant_model import get_plant_group
@@ -22,10 +21,8 @@ class Beds:
             group = get_plant_group(bed.plant_type, bed.plant_height)
 
             if not group:
-                msg = "Error: plant type '{}' and height '{}' is unknown.".format(
-                    bed.plant_type, bed.plant_height)
-                print(msg, file=sys.stderr)
-                continue
+                raise RuntimeError("Error: plant type '{}' and height '{}' is unknown.".format(
+                    bed.plant_type, bed.plant_height))
 
             groups.add(group)
             self.bed_plant_groups[bed.name] = group
@@ -57,7 +54,6 @@ class Beds:
             collection.objects.link(bed_object)
 
     def create_bed(self, bed: config.Bed):
-        print(f"bed: {bed}")
         row_half_width = (bed.rows_count - 1) * bed.row_distance / 2.
 
         def plant_position(bed_ind, row_ind, plant_ind):
