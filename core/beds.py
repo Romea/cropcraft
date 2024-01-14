@@ -5,11 +5,12 @@ import sys
 import mathutils
 
 from .plant_model import get_plant_group
+from . import config
 
 
 class Beds:
 
-    def __init__(self, field: dict):
+    def __init__(self, field: config.Field):
         self.field = field
         self.bed_plant_groups = {}
         self.cur_bed_offset = 0.
@@ -17,17 +18,17 @@ class Beds:
 
     def load_plants(self):
         groups = set()
-        for bed_name, bed in self.field['beds'].items():
-            group = get_plant_group(bed['plant_type'], bed['plant_height'])
+        for bed in self.field.beds:
+            group = get_plant_group(bed.plant_type, bed.plant_height)
 
             if not group:
                 msg = "Error: plant type '{}' and height '{}' is unknown.".format(
-                    bed['plant_type'], bed['plant_height'])
+                    bed.plant_type, bed.plant_height)
                 print(msg, file=sys.stderr)
                 continue
 
             groups.add(group)
-            self.bed_plant_groups[bed_name] = group
+            self.bed_plant_groups[bed.name] = group
 
         plants_collection = bpy.data.collections['plants']
 
@@ -51,36 +52,36 @@ class Beds:
     def create_beds(self):
         collection = bpy.data.collections['generated']
 
-        for name, bed in self.field['beds'].items():
-            bed_object = self.create_bed(name, bed)
+        for bed in self.field.beds:
+            bed_object = self.create_bed(bed)
             collection.objects.link(bed_object)
 
-    def create_bed(self, name: str, bed: dict):
-        plants_count = bed['plants_count']
-        rows_count = bed['rows_count']
-        beds_count = bed['beds_count']
-        plant_dist = bed['plant_distance']
-        row_dist = bed['row_distance']
-        bed_width = bed['bed_width'] if 'bed_width' in bed else self.field['bed_width']
-
-        row_half_width = (rows_count - 1) * row_dist / 2.
+    def create_bed(self, bed: config.Bed):
+        print(f"bed: {bed}")
+        row_half_width = (bed.rows_count - 1) * bed.row_distance / 2.
 
         def plant_position(bed_ind, row_ind, plant_ind):
             return [
-                plant_ind * plant_dist,
-                self.cur_bed_offset + bed_ind * bed_width - row_half_width + row_ind * row_dist,
+                plant_ind * bed.plant_distance,
+                self.cur_bed_offset + bed_ind * bed.bed_width - row_half_width +
+                row_ind * bed.row_distance,
                 0.,
             ]
 
-        id_tuples = itertools.product(range(beds_count), range(rows_count), range(plants_count))
+        id_tuples = itertools.product(
+            range(bed.beds_count),
+            range(bed.rows_count),
+            range(bed.plants_count),
+        )
         vertices = list(map(lambda ids: plant_position(*ids), id_tuples))
 
-        object = self.create_bed_object(vertices, name)
+        object = self.create_bed_object(vertices, bed.name)
 
         # increase bed offset for the next bed
-        self.cur_bed_offset += beds_count * bed_width
+        if bed.shift_next_bed:
+            self.cur_bed_offset += bed.beds_count * bed.bed_width
 
-        self.update_center_pos(bed_width, (plants_count - 1) * plant_dist)
+        self.update_center_pos(bed.bed_width, (bed.plants_count - 1) * bed.plant_distance)
 
         return object
 
@@ -101,12 +102,6 @@ class Beds:
 
         # apply plant material to the bed object
         object.active_material = plant_collection.objects[0].active_material.copy()
-
-        # # copy UVMap from
-        # attrUV = target.data.attributes["UVMap"].data
-        # targetUV = target.data.uv_layers[0].data 
-        # for i, elem in enumerate(targetUV):
-        #     elem.uv = attrUV[i].vector
 
         return object
 
