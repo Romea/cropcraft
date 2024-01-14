@@ -15,10 +15,11 @@ def export_blender_file(params: dict, output_dir: str):
 def export_gazebo_model(params: dict, output_dir: str):
     name = params['name']
     path = os.path.join(output_dir, name.replace(' ', '_'))
-    author = params['author'] if 'author' in params else None
+    author = params.get('author')
+    use_absolute_path = params.get('use_absolute_path', False)
     collection = bpy.data.collections['generated']
 
-    gazebo_model = GazeboModel(path, name, author)
+    gazebo_model = GazeboModel(path, name, author, use_absolute_path)
     gazebo_model.add_collection(collection)
     gazebo_model.export_sdf()
     gazebo_model.export_config()

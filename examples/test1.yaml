@@ -4,6 +4,7 @@ output:
     type: gazebo_model
     name: test1
     author: 'Cyrille Pierre'
+    # use_absolute_path: true
 
   blender:
     type: blender_file
