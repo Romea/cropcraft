@@ -2,6 +2,7 @@ import bpy
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import os
+import pprint
 
 
 class GazeboModel:
@@ -33,8 +34,9 @@ class GazeboModel:
         relpath = os.path.relpath(filepath, os.path.dirname(self.model_path))
         return f"model://{relpath}"
 
-    def export_mesh(self, filepath: str):
+    def export_mesh(self, filepath: str, object: bpy.types.Object):
         ''' Exports the dae file and its associated textures of the selected objects '''
+        object.select_set(True)
         bpy.ops.wm.obj_export(
             filepath=filepath + '.obj',
             check_existing=False,
@@ -42,8 +44,9 @@ class GazeboModel:
             up_axis='Z',
             forward_axis='Y',
             export_selected_objects=True,
-            export_materials=True,
+            export_materials=False,
         )
+        object.select_set(False)
 
     def export_image(self, name: str):
         image_path = os.path.join(self.materials_path, name)
@@ -137,13 +140,13 @@ material {name}
         return model
 
     def add_collection(self, collection: bpy.types.Collection):
-        bpy.ops.object.select_all(action='DESELECT')
+        for object in bpy.data.objects:
+            object.select_set(False)
+
         for object in collection.all_objects.values():
             if object.type == 'MESH':
-                object.select_set(True)
-                self.export_mesh(os.path.join(self.meshes_path, object.name))
+                self.export_mesh(os.path.join(self.meshes_path, object.name), object)
                 self.create_sdf_link(object)
-                object.select_set(False)
 
     def export_sdf(self):
         xml_string = ET.tostring(self.sdf, encoding='unicode')
