@@ -46,10 +46,10 @@ def make_noise(data: dict):
         raise ParserError("Missing element 'noise' as children of 'field'")
 
     noise = config.Noise()
-    noise.position = data.get('position', 0.)
-    noise.tilt = data.get('tilt', 0.)
-    noise.missing = data.get('missing', 0.)
-    noise.scale = data.get('scale', 0.)
+    noise.position = noise_data.get('position', 0.)
+    noise.tilt = noise_data.get('tilt', 0.)
+    noise.missing = noise_data.get('missing', 0.)
+    noise.scale = noise_data.get('scale', 0.)
     return noise
 
 

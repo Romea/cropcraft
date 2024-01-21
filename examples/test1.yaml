@@ -34,7 +34,7 @@ field:
       offset: [0, 0, 0]
 
   noise:
-    position: .008
+    position: .009
     tilt: .05
-    missing: .15
-    scale: .10
+    missing: .17
+    scale: .08
