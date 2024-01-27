@@ -25,7 +25,7 @@ def main(argv: list):
     beds.create_beds()
 
     weeds = core.ground.Ground(cfg.field)
-    # weeds.load_weeds()
+    weeds.load_weeds()
 
     look_at = beds.center_pos.copy()
     look_at.x = 6.

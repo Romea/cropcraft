@@ -16,19 +16,24 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
 
-        for group in os.listdir(os.path.join('assets', 'weeds')):
-            group_name = os.path.basename(group)
+        weeds_path = os.path.join('assets', 'weeds')
+
+        for group_name in os.listdir(weeds_path):
             collection = bpy.data.collections.new(group_name)
             weeds_collection.children.link(collection)
             view_layer.active_layer_collection = weeds_layer_coll.children[group_name]
 
-            for model_filepath in os.listdir(group):
-                bpy.ops.wm.obj_import(
-                    filepath=model_filepath,
-                    up_axis='Z',
-                    forward_axis='Y',
-                    use_split_objects=False,
-                )
+            group_path = os.path.join(weeds_path, group_name)
+            models = filter(lambda x: x.endswith('.obj'), os.listdir(group_path))
+
+            for model in models:
+                if model.endswith('.obj'):
+                    bpy.ops.wm.obj_import(
+                        filepath=os.path.join(group_path, model),
+                        up_axis='Z',
+                        forward_axis='Y',
+                        use_split_objects=False,
+                    )
 
     def create_plane(self, points: list):
         pass

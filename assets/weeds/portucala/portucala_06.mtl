@@ -9,7 +9,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd /home/cyrille/data/tiara/modeling/worlds/agricultural_world/textures/portulaca.jpg
+map_Kd portulaca.jpg
 
 newmtl stem.001
 Ns 61.519623
