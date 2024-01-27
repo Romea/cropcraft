@@ -39,3 +39,19 @@ field:
     tilt: .05
     missing: .15
     scale: .10
+
+  weeds:
+    portucala:
+      plant_type: portucala
+      density: 0.1
+
+    polygonum:
+      plant_type: polygonum
+      density: 0.1
+
+    taraxacum:
+      plant_type: taraxacum
+      density: 0.1
+
+  stones:
+    density: 0.1

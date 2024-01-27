@@ -45,7 +45,7 @@ class Beds:
                 bpy.ops.wm.obj_import(
                     filepath=os.path.join('assets', 'plants', group.type, model.filename),
                     up_axis='Z',
-                    forward_axis='X',
+                    forward_axis='Y',
                 )
 
     def create_beds(self):

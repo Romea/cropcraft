@@ -24,10 +24,23 @@ class Noise:
 
 
 @dataclass
+class Weed:
+    plant_type: str = None
+    density: float = None
+
+
+@dataclass
+class Stones:
+    density: float = None
+
+
+@dataclass
 class Field:
     default: Bed = None
     noise: Noise = None
     beds: typing.List[Bed] = None
+    weeds: typing.List[Weed] = None
+    stones: Stones = None
 
 
 @dataclass

@@ -22,7 +22,6 @@ class PlantGroup:
         return f"{self.type}_{self.name}"
 
 
-
 @dataclass
 class Plant:
     x: float = 0.
