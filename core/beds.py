@@ -39,9 +39,10 @@ class Beds:
             full_name = group.full_name()
             collection = bpy.data.collections.new(full_name)
             plants_collection.children.link(collection)
-            view_layer.active_layer_collection = plants_layer_coll.children[full_name]
+            plant_layer_coll = plants_layer_coll.children[full_name]
 
             for model in group.models:
+                view_layer.active_layer_collection = plant_layer_coll
                 bpy.ops.wm.obj_import(
                     filepath=os.path.join('assets', 'plants', group.type, model.filename),
                     up_axis='Z',

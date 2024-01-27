@@ -21,12 +21,13 @@ class Ground:
         for group_name in os.listdir(weeds_path):
             collection = bpy.data.collections.new(group_name)
             weeds_collection.children.link(collection)
-            view_layer.active_layer_collection = weeds_layer_coll.children[group_name]
+            group_layer_coll = weeds_layer_coll.children[group_name]
 
             group_path = os.path.join(weeds_path, group_name)
             models = filter(lambda x: x.endswith('.obj'), os.listdir(group_path))
 
             for model in models:
+                view_layer.active_layer_collection = group_layer_coll
                 if model.endswith('.obj'):
                     bpy.ops.wm.obj_import(
                         filepath=os.path.join(group_path, model),
