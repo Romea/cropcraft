@@ -11,6 +11,7 @@ output:
     filename: test2.blend
 
 field:
+  headland_width: 4.
   bed_width: 1.57
 
   beds:
@@ -28,11 +29,21 @@ field:
       plant_type: bean
       plant_height: .14
       plant_distance: .14
-      bed_width: .785
       row_distance: .285
       plants_count: 100
       rows_count: 2
-      beds_count: 5
+      beds_count: 3
+      shift_next_bed: false
+
+    bed3:  
+      plant_type: bean
+      plant_height: .14
+      plant_distance: .14
+      row_distance: .285
+      plants_count: 100
+      rows_count: 2
+      beds_count: 2
+      offset: [0., .785, 0.]
 
   noise:
     position: .008

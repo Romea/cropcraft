@@ -37,6 +37,7 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
     bed.beds_count = get_element('beds_count', default.beds_count)
     bed.bed_width = get_element('bed_width', default.bed_width)
     bed.shift_next_bed = data.get('shift_next_bed', True)
+    bed.offset = get_element('offset', default.offset)
     return bed
 
 
@@ -96,6 +97,8 @@ def make_field(cfg: dict):
     weeds_data = field_data.get('weeds')
     if weeds_data is not None:
         field.weeds = [make_weed(name, data) for name, data in weeds_data.items()]
+
+    field.headland_width = field_data.get('headland_width', field.headland_width)
 
     return field
 

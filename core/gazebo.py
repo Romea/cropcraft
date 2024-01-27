@@ -2,7 +2,6 @@ import bpy
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import os
-import pprint
 
 
 class GazeboModel:
@@ -91,8 +90,9 @@ material {name}
 
         material_filepath = os.path.join(self.materials_path, object.name + '.material')
 
-        self.export_image(diffuse_map)
-        self.append_ogre_material(object.name, material_filepath, diffuse_map)
+        if diffuse_map:
+            self.export_image(diffuse_map)
+            self.append_ogre_material(object.name, material_filepath, diffuse_map)
 
         # setup diffuse/specular color
         material = ET.SubElement(visual, "material")

@@ -7,7 +7,7 @@ from . import config
 class Ground:
 
     def __init__(self, field: config.Field):
-        self.weeds = field.weeds
+        self.field = field
 
     def load_weeds(self):
         weeds_collection = bpy.data.collections['weeds']
@@ -28,13 +28,31 @@ class Ground:
 
             for model in models:
                 view_layer.active_layer_collection = group_layer_coll
-                if model.endswith('.obj'):
-                    bpy.ops.wm.obj_import(
-                        filepath=os.path.join(group_path, model),
-                        up_axis='Z',
-                        forward_axis='Y',
-                        use_split_objects=False,
-                    )
+                bpy.ops.wm.obj_import(
+                    filepath=os.path.join(group_path, model),
+                    up_axis='Z',
+                    forward_axis='Y',
+                    use_split_objects=False,
+                )
 
-    def create_plane(self, points: list):
-        pass
+    def create_plane(self, width: float, length: float):
+        offset = self.field.headland_width
+        vertices = [
+            (-offset, -offset, 0.),
+            (length + offset, -offset, 0.),
+            (length + offset, width + offset, 0.),
+            (-offset, width + offset, 0.),
+        ]
+        edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
+        faces = [(0, 1, 2, 3)]
+
+        mesh = bpy.data.meshes.new('ground')
+        mesh.from_pydata(vertices, edges=edges, faces=faces)
+        mesh.update()
+
+        material = bpy.data.materials.new('ground')
+        object = bpy.data.objects.new('ground', mesh)
+        object.active_material = material
+
+        collection = bpy.data.collections['generated']
+        collection.objects.link(object)

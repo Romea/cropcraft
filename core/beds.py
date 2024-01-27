@@ -16,6 +16,8 @@ class Beds:
         self.bed_plant_groups = {}
         self.cur_bed_offset = 0.
         self.center_pos = mathutils.Vector()
+        self.width = 0.
+        self.length = 0.
 
     def load_plants(self):
         groups = set()
@@ -58,7 +60,7 @@ class Beds:
 
     def create_bed(self, bed: config.Bed):
         noise = self.field.noise
-        row_half_width = (bed.rows_count - 1) * bed.row_distance / 2.
+        row_offset = (bed.bed_width - (bed.rows_count - 1) * bed.row_distance) / 2.
 
         id_tuples = itertools.product(
             range(bed.beds_count),
@@ -73,12 +75,13 @@ class Beds:
             if random.random() < noise.missing:
                 continue
 
-            x = plant_i * bed.plant_distance
+            x = bed.offset[0] + plant_i * bed.plant_distance
             x += random.normalvariate(0, noise.position)
-            y = self.cur_bed_offset + bed_i * bed.bed_width
-            y += row_i * bed.row_distance - row_half_width
+            y = bed.offset[1] + self.cur_bed_offset + bed_i * bed.bed_width + row_offset
+            y += row_i * bed.row_distance
             y += random.normalvariate(0, noise.position)
-            vertices.append((x, y, 0.))
+            z = bed.offset[2]
+            vertices.append((x, y, z))
 
             scales.append(random.lognormvariate(0, noise.scale))
 
@@ -89,11 +92,11 @@ class Beds:
 
         object = self.create_bed_object(vertices, bed.name, scales, rotations)
 
-        # increase bed offset for the next bed
+        cur_width = bed.beds_count * bed.bed_width
+        self.width = max(self.width, self.cur_bed_offset + cur_width)
+        self.length = max(self.length, (bed.plants_count - 1) * bed.plant_distance)
         if bed.shift_next_bed:
-            self.cur_bed_offset += bed.beds_count * bed.bed_width
-
-        self.update_center_pos(bed.bed_width, (bed.plants_count - 1) * bed.plant_distance)
+            self.cur_bed_offset += cur_width
 
         return object
 
@@ -122,6 +125,5 @@ class Beds:
 
         return object
 
-    def update_center_pos(self, bed_width: float, row_length: float):
-        self.center_pos.x = max(self.center_pos.x, row_length / 2.)
-        self.center_pos.y = (self.cur_bed_offset - bed_width) / 2.
+    def get_center_pos(self):
+        return mathutils.Vector((self.length / 2., self.width / 2., 0.))

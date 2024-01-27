@@ -26,8 +26,9 @@ def main(argv: list):
 
     weeds = core.ground.Ground(cfg.field)
     weeds.load_weeds()
+    weeds.create_plane(beds.width, beds.length)
 
-    look_at = beds.center_pos.copy()
+    look_at = beds.get_center_pos()
     look_at.x = 6.
     core.base.create_camera(look_at)
 

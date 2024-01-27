@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import typing
 
 @dataclass
@@ -10,9 +10,10 @@ class Bed:
     bed_width: float = None
     row_distance: float = None
     plants_count: int = None
-    rows_count: int = None
-    beds_count: int = None
+    rows_count: int = 1
+    beds_count: int = 1
     shift_next_bed: bool = None
+    offset: typing.List[float] = field(default_factory=lambda: [0., 0., 0.])
 
 
 @dataclass
@@ -36,6 +37,7 @@ class Stones:
 
 @dataclass
 class Field:
+    headland_width: float = 4.0
     default: Bed = None
     noise: Noise = None
     beds: typing.List[Bed] = None
