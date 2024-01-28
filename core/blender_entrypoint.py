@@ -36,7 +36,7 @@ def main(argv: list):
     core.base.create_camera(look_at)
 
     for output in cfg.outputs:
-        output.export(output_dir)
+        output.export(output_dir, cfg.field)
 
 
 if __name__ == '__main__':

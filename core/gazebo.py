@@ -3,6 +3,8 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import os
 
+from . import config
+
 
 class GazeboModel:
 
@@ -33,8 +35,9 @@ class GazeboModel:
         relpath = os.path.relpath(filepath, os.path.dirname(self.model_path))
         return f"model://{relpath}"
 
-    def export_mesh(self, filepath: str, object: bpy.types.Object):
-        ''' Exports the dae file and its associated textures of the selected objects '''
+    def export_object(self, name: str, object: bpy.types.Object):
+        filepath = os.path.join(self.meshes_path, name)
+
         object.select_set(True)
         bpy.ops.wm.obj_export(
             filepath=filepath + '.obj',
@@ -100,7 +103,7 @@ material {name}
         ET.SubElement(script, 'uri').text = self.make_uri(material_filepath)
         ET.SubElement(script, 'name').text = object.name
 
-    def create_sdf_link(self, object: bpy.types.Object):
+    def create_sdf_link(self, object: bpy.types.Object, collision_enabled=False, retro_laser=0.):
         mesh_path = os.path.join(self.meshes_path, object.name + '.obj')
 
         link = ET.SubElement(self.model, "link", attrib={"name": object.name})
@@ -120,9 +123,11 @@ material {name}
 
         surface = ET.SubElement(collision, "surface")
         contact = ET.SubElement(surface, "contact")
-        ET.SubElement(contact, "collide_without_contact").text = 'true'
-        ET.SubElement(contact, "collide_without_contact_bitmask").text = '0x01'
-        ET.SubElement(contact, "collide_bitmask").text = '0x00'
+        if not collision_enabled:
+            ET.SubElement(contact, "collide_without_contact").text = 'true'
+            ET.SubElement(contact, "collide_bitmask").text = '0x00'
+
+        ET.SubElement(collision, 'laser_retro').text = str(retro_laser)
 
     def create_config(self):
         model = ET.Element('model')
@@ -139,23 +144,36 @@ material {name}
 
         return model
 
-    def add_collection(self, collection: bpy.types.Collection):
+    def export_field(self, field: config.Field):
         for object in bpy.data.objects:
             object.select_set(False)
 
-        for object in collection.all_objects.values():
-            if object.type == 'MESH':
-                self.export_mesh(os.path.join(self.meshes_path, object.name), object)
-                self.create_sdf_link(object)
+        ground = bpy.data.objects['ground']
+        self.export_object('ground', ground)
+        self.create_sdf_link(ground, collision_enabled=True, retro_laser=0.)
 
-    def export_sdf(self):
+        for index, bed in enumerate(field.beds):
+            object = bpy.data.objects[bed.name]
+            self.export_object(bed.name, object)
+            self.create_sdf_link(object, collision_enabled=False, retro_laser=float(index + 1))
+            
+        for index, weed in enumerate(field.weeds):
+            object = bpy.data.objects[weed.name]
+            self.export_object(weed.name, object)
+            self.create_sdf_link(object, collision_enabled=False, retro_laser=float(-index - 1))
+
+        stones = bpy.data.objects['stones']
+        self.export_object('stones', stones)
+        self.create_sdf_link(stones, collision_enabled=False, retro_laser=-0.5)
+
+    def generate_sdf(self):
         xml_string = ET.tostring(self.sdf, encoding='unicode')
         reparsed = minidom.parseString(xml_string)
 
         with open(os.path.join(self.model_path, self.sdf_filename), "w") as sdf_file:
             sdf_file.write(reparsed.toprettyxml(indent="  "))
 
-    def export_config(self):
+    def generate_config(self):
         model = self.create_config()
         xml_string = ET.tostring(model, encoding='unicode')
         reparsed = minidom.parseString(xml_string)

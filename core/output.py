@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import sys
 import bpy
 import os
 
@@ -11,7 +10,7 @@ from . import config
 class BlenderFile:
     filename: str = None
 
-    def export(self, output_dir: str):
+    def export(self, output_dir: str, field: config.Field):
         filepath = os.path.join(output_dir, self.filename)
 
         bpy.ops.file.pack_all()
@@ -25,11 +24,10 @@ class GazeboModel:
     author: str = None
     use_absolute_path: bool = None
 
-    def export(self, output_dir: str):
+    def export(self, output_dir: str, field: config.Field):
         path = os.path.join(output_dir, self.path)
-        collection = bpy.data.collections['generated']
 
         model = gazebo.GazeboModel(path, self.name, self.author, self.use_absolute_path)
-        model.add_collection(collection)
-        model.export_sdf()
-        model.export_config()
+        model.export_field(field)
+        model.generate_sdf()
+        model.generate_config()
