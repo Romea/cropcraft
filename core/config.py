@@ -26,6 +26,7 @@ class Noise:
 
 @dataclass
 class Weed:
+    name: str = None
     plant_type: str = None
     density: float = None
 
@@ -37,7 +38,9 @@ class Stones:
 
 @dataclass
 class Field:
-    headland_width: float = 4.0
+    headland_width: float = 4.
+    scattering_extra_width: float = 1.
+
     default: Bed = None
     noise: Noise = None
     beds: typing.List[Bed] = None

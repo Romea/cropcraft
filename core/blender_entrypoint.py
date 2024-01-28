@@ -24,9 +24,10 @@ def main(argv: list):
     beds.load_plants()
     beds.create_beds()
 
-    weeds = core.ground.Ground(cfg.field)
+    weeds = core.ground.Ground(cfg.field, beds)
     weeds.load_weeds()
-    weeds.create_plane(beds.width, beds.length)
+    weeds.create_plane()
+    weeds.create_weeds()
 
     look_at = beds.get_center_pos()
     look_at.x = 6.

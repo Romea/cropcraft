@@ -1,7 +1,9 @@
 import os
 import bpy
+import random
 
 from . import config
+from .beds import Beds
 
 
 def create_plane_object(name: str, width: float, length: float, offset: float):
@@ -23,8 +25,9 @@ def create_plane_object(name: str, width: float, length: float, offset: float):
 
 class Ground:
 
-    def __init__(self, field: config.Field):
+    def __init__(self, field: config.Field, beds: Beds):
         self.field = field
+        self.beds = beds
 
     def load_weeds(self):
         weeds_collection = bpy.data.collections['weeds']
@@ -52,8 +55,9 @@ class Ground:
                     use_split_objects=False,
                 )
 
-    def create_plane(self, width: float, length: float):
-        object = create_plane_object('ground', width, length, self.field.headland_width)
+    def create_plane(self):
+        object = create_plane_object('ground', self.beds.width, self.beds.length,
+                                     self.field.headland_width)
 
         # create material
         mat = bpy.data.materials.new('ground')
@@ -76,6 +80,24 @@ class Ground:
         uv_modifier = object.modifiers.new('UV', 'UV_PROJECT')
         uv_modifier.uv_layer = 'UVMap'
         uv_modifier.projectors[0].object = uv_object
+
+        collection = bpy.data.collections['generated']
+        collection.objects.link(object)
+
+    def create_weeds(self):
+        for weed in self.field.weeds:
+            self.create_weed(weed)
+
+    def create_weed(self, weed: config.Weed):
+        object = create_plane_object(weed.name, self.beds.width, self.beds.length,
+                                     self.field.scattering_extra_width)
+
+        object.modifiers.new('grid', 'REMESH')
+
+        node = object.modifiers.new('scattering', 'NODES')
+        node.node_group = bpy.data.node_groups['scattering']
+        node['Socket_3'] = bpy.data.collections[weed.plant_type]
+        node['Socket_4'] = random.randint(-10000, 10000)
 
         collection = bpy.data.collections['generated']
         collection.objects.link(object)

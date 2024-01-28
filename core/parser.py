@@ -56,6 +56,7 @@ def make_noise(data: dict):
 
 def make_weed(name: str, data: dict):
     weed = config.Weed()
+    weed.name = name
     weed.plant_type = data.get('plant_type')
     if weed.plant_type is None:
         raise ParserError(f"Missing element 'plant_type' as children of '{name}'")
@@ -99,6 +100,8 @@ def make_field(cfg: dict):
         field.weeds = [make_weed(name, data) for name, data in weeds_data.items()]
 
     field.headland_width = field_data.get('headland_width', field.headland_width)
+    field.scattering_extra_width = field_data.get('scattering_extra_width',
+                                                  field.scattering_extra_width)
 
     return field
 
