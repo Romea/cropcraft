@@ -19,10 +19,10 @@ class Bed:
 
 @dataclass
 class Noise:
-    position: float = None
-    tilt: float = None
-    missing: float = None
-    scale: float = None
+    position: float = 0.
+    tilt: float = 0.
+    missing: float = 0.
+    scale: float = 0.
 
 
 @dataclass

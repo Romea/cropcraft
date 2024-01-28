@@ -50,15 +50,15 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
 
 
 def make_noise(data: dict):
+    noise = config.Noise()
     noise_data = data.get('noise')
     if noise_data is None:
-        raise ParserError("Missing element 'noise' as children of 'field'")
+        return noise
 
-    noise = config.Noise()
-    noise.position = noise_data.get('position', 0.)
-    noise.tilt = noise_data.get('tilt', 0.)
-    noise.missing = noise_data.get('missing', 0.)
-    noise.scale = noise_data.get('scale', 0.)
+    noise.position = noise_data.get('position', noise.position)
+    noise.tilt = noise_data.get('tilt', noise.tilt)
+    noise.missing = noise_data.get('missing', noise.missing)
+    noise.scale = noise_data.get('scale', noise.scale)
     return noise
 
 
@@ -87,6 +87,8 @@ def make_stones(field: dict):
     if stones.density is None:
         raise ParserError("Missing element 'density' as children of 'stones'")
 
+    return stones
+
 
 def make_field(cfg: dict):
     field_data = cfg.get('field')
@@ -106,6 +108,8 @@ def make_field(cfg: dict):
     weeds_data = field_data.get('weeds')
     if weeds_data is not None:
         field.weeds = [make_weed(name, data) for name, data in weeds_data.items()]
+
+    field.stones = make_stones(field_data)
 
     field.headland_width = field_data.get('headland_width', field.headland_width)
     field.scattering_extra_width = field_data.get('scattering_extra_width',

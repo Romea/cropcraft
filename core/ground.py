@@ -101,6 +101,9 @@ class Ground:
         collection.objects.link(object)
 
     def create_weeds(self):
+        if self.field.weeds is None:
+            return
+
         for weed in self.field.weeds:
             self.create_weed(weed)
 
@@ -124,6 +127,9 @@ class Ground:
         collection.objects.link(object)
 
     def create_stones(self):
+        if self.field.stones is None:
+            return
+
         object = create_plane_object('stones', self.beds.width, self.beds.length,
                                      self.field.scattering_extra_width)
         stones_collection = bpy.data.collections['stones']

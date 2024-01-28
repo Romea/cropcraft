@@ -14,6 +14,7 @@ field:
   headland_width: 4.
 
   bed_width: 1.57
+  plant_distance: .14
   y_function: '.2 * sin(x * tau / 15.)'
   shift_next_bed: false
 
@@ -21,7 +22,6 @@ field:
     bed1:  
       plant_type: maize
       plant_height: .22
-      plant_distance: .14
       row_distance: .785
       plants_count: 100
       rows_count: 2
@@ -30,7 +30,6 @@ field:
     bed2:  
       plant_type: bean
       plant_height: .14
-      plant_distance: .14
       row_distance: .285
       plants_count: 100
       rows_count: 2
@@ -39,7 +38,6 @@ field:
     bed3:  
       plant_type: bean
       plant_height: .14
-      plant_distance: .14
       row_distance: .285
       plants_count: 100
       rows_count: 2
