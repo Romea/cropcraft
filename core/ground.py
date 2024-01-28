@@ -91,13 +91,18 @@ class Ground:
     def create_weed(self, weed: config.Weed):
         object = create_plane_object(weed.name, self.beds.width, self.beds.length,
                                      self.field.scattering_extra_width)
+        weed_collection = bpy.data.collections[weed.plant_type]
 
         object.modifiers.new('grid', 'REMESH')
 
         node = object.modifiers.new('scattering', 'NODES')
         node.node_group = bpy.data.node_groups['scattering']
-        node['Socket_3'] = bpy.data.collections[weed.plant_type]
+        node['Socket_3'] = weed_collection
         node['Socket_4'] = random.randint(-10000, 10000)
+
+        # apply instance material to the object
+        for material in weed_collection.objects[0].data.materials:
+            object.data.materials.append(material.copy())
 
         collection = bpy.data.collections['generated']
         collection.objects.link(object)
