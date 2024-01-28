@@ -10,6 +10,7 @@ def create_collections():
     resources = bpy.data.collections.new('resources')
     plants = bpy.data.collections.new('plants')
     weeds = bpy.data.collections.new('weeds')
+    stones = bpy.data.collections.new('stones')
     env = bpy.data.collections.new('env')
     scene = bpy.context.scene.collection
 
@@ -18,6 +19,7 @@ def create_collections():
     scene.children.link(generated)
     resources.children.link(plants)
     resources.children.link(weeds)
+    resources.children.link(stones)
 
     view_layer = bpy.context.scene.view_layers['ViewLayer']
     view_layer.layer_collection.children['resources'].hide_viewport = True

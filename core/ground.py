@@ -55,6 +55,23 @@ class Ground:
                     use_split_objects=False,
                 )
 
+    def load_stones(self):
+        view_layer = bpy.context.view_layer
+        scene_layer_coll = view_layer.layer_collection
+        stones_layer_coll = scene_layer_coll.children['resources'].children['stones']
+
+        stones_path = os.path.join('assets', 'stones')
+        models = filter(lambda x: x.endswith('.obj'), os.listdir(stones_path))
+
+        for model in models:
+            view_layer.active_layer_collection = stones_layer_coll
+            bpy.ops.wm.obj_import(
+                filepath=os.path.join(stones_path, model),
+                up_axis='Z',
+                forward_axis='Y',
+                use_split_objects=False,
+            )
+
     def create_plane(self):
         object = create_plane_object('ground', self.beds.width, self.beds.length,
                                      self.field.headland_width)
@@ -94,13 +111,32 @@ class Ground:
 
         object.modifiers.new('grid', 'REMESH')
 
-        node = object.modifiers.new('scattering', 'NODES')
+        node = object.modifiers.new(weed.name, 'NODES')
         node.node_group = bpy.data.node_groups['scattering']
         node['Socket_3'] = weed_collection
         node['Socket_4'] = random.randint(-10000, 10000)
 
         # apply instance material to the object
         for material in weed_collection.objects[0].data.materials:
+            object.data.materials.append(material.copy())
+
+        collection = bpy.data.collections['generated']
+        collection.objects.link(object)
+
+    def create_stones(self):
+        object = create_plane_object('stones', self.beds.width, self.beds.length,
+                                     self.field.scattering_extra_width)
+        stones_collection = bpy.data.collections['stones']
+
+        object.modifiers.new('grid', 'REMESH')
+
+        node = object.modifiers.new('stones', 'NODES')
+        node.node_group = bpy.data.node_groups['stones_scattering']
+        node['Socket_2'] = stones_collection
+        node['Socket_3'] = random.randint(-10000, 10000)
+
+        # apply instance material to the object
+        for material in stones_collection.objects[0].data.materials:
             object.data.materials.append(material.copy())
 
         collection = bpy.data.collections['generated']
