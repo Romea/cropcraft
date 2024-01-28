@@ -70,7 +70,6 @@ class Ground:
         object.active_material = mat
 
         # create UV
-        bpy.types.UVProjector
         view_layer = bpy.context.view_layer
         view_layer.active_layer_collection = view_layer.layer_collection.children['resources']
         bpy.ops.mesh.primitive_plane_add()
