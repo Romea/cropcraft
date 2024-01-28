@@ -76,11 +76,12 @@ class Beds:
                 continue
 
             x = bed.offset[0] + plant_i * bed.plant_distance
-            x += random.normalvariate(0, noise.position)
             y = bed.offset[1] + self.cur_bed_offset + bed_i * bed.bed_width + row_offset
-            y += row_i * bed.row_distance
-            y += random.normalvariate(0, noise.position)
+            y += bed.y_function(x) + row_i * bed.row_distance
             z = bed.offset[2]
+
+            x += random.normalvariate(0, noise.position)
+            y += random.normalvariate(0, noise.position)
             vertices.append((x, y, z))
 
             scales.append(random.lognormvariate(0, noise.scale))

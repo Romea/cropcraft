@@ -10,6 +10,7 @@ yaml = importlib.import_module('yaml')
 
 from . import config
 from . import output as output_classes
+from . import input_utils
 
 
 class ParserError(Exception):
@@ -36,8 +37,15 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
     bed.rows_count = get_element('rows_count', default.rows_count)
     bed.beds_count = get_element('beds_count', default.beds_count)
     bed.bed_width = get_element('bed_width', default.bed_width)
-    bed.shift_next_bed = data.get('shift_next_bed', True)
+    bed.shift_next_bed = get_element('shift_next_bed', default.shift_next_bed)
     bed.offset = get_element('offset', default.offset)
+
+    y_fn_expr = data.get('y_function')
+    if y_fn_expr is not None:
+        bed.y_function = input_utils.safe_eval_fn('x', y_fn_expr)
+    else:
+        bed.y_function = default.y_function
+
     return bed
 
 
