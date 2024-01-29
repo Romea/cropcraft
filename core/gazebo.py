@@ -162,9 +162,10 @@ material {name}
             self.export_object(weed.name, object)
             self.create_sdf_link(object, collision_enabled=False, retro_laser=float(-index - 1))
 
-        stones = bpy.data.objects['stones']
-        self.export_object('stones', stones)
-        self.create_sdf_link(stones, collision_enabled=False, retro_laser=-0.5)
+        if field.stones is not None:
+            stones = bpy.data.objects['stones']
+            self.export_object('stones', stones)
+            self.create_sdf_link(stones, collision_enabled=False, retro_laser=-0.5)
 
     def generate_sdf(self):
         xml_string = ET.tostring(self.sdf, encoding='unicode')

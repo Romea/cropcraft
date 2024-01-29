@@ -45,7 +45,7 @@ class Field:
     default: Bed = None
     noise: Noise = None
     beds: typing.List[Bed] = None
-    weeds: typing.List[Weed] = None
+    weeds: typing.List[Weed] = field(default_factory=lambda: [])
     stones: Stones = None
 
 
