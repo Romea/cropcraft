@@ -1,48 +1,37 @@
-output_enabled: [blender, gazebo]
+output_enabled: [gazebo]
 output:
   gazebo:
     type: gazebo_model
-    name: test2
+    name: cropcraft_test3
     author: 'Cyrille Pierre'
     # use_absolute_path: true
 
   blender:
     type: blender_file
-    filename: test2.blend
+    filename: cropcraft_test3.blend
 
 field:
-  headland_width: 4.
+  headland_width: 8.
 
   bed_width: 1.57
-  plant_distance: .15
-  y_function: '.2 * sin(x * tau / 15.)'
-  shift_next_bed: false
+  plant_distance: .14
+  plants_count: 150
+  y_function: '(lambda t: 7. * sin(t * tau) * t**2 * (t - 1)**2)(x / 21.)'
 
   beds:
     bed1:  
       plant_type: maize
       plant_height: .22
       row_distance: .785
-      plants_count: 100
       rows_count: 2
-      beds_count: 3
+      beds_count: 2
 
     bed2:  
       plant_type: bean
       plant_height: .15
-      row_distance: .285
-      plants_count: 100
-      rows_count: 2
-      beds_count: 3
-
-    bed3:  
-      plant_type: bean
-      plant_height: .14
-      row_distance: .285
-      plants_count: 100
-      rows_count: 2
+      row_distance: .5233
+      rows_count: 3
       beds_count: 2
-      offset: [0., .785, 0.]
 
   noise:
     position: .008
@@ -53,15 +42,11 @@ field:
   weeds:
     portulaca:
       plant_type: portulaca
-      density: 0.1
 
     polygonum:
       plant_type: polygonum
-      density: 0.1
 
     taraxacum:
       plant_type: taraxacum
-      density: 0.1
 
-  stones:
-    density: 0.1
+  stones: {}

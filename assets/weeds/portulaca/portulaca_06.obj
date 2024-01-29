@@ -1,7 +1,7 @@
 # Blender 4.0.2
 # www.blender.org
-mtllib portucala_06.mtl
-o portucala.005
+mtllib portulaca_06.mtl
+o portulaca.005
 v 0.001127 -0.004601 0.000000
 v -0.002319 0.000311 -0.003463
 v -0.002484 0.000192 0.003463
