@@ -69,10 +69,7 @@ def make_weed(name: str, data: dict):
     if weed.plant_type is None:
         raise ParserError(f"Missing element 'plant_type' as children of '{name}'")
 
-    weed.density = data.get('density')
-    if weed.density is None:
-        raise ParserError(f"Missing element 'density' as children of '{name}'")
-
+    weed.density = data.get('density', weed.density)
     return weed
 
 
@@ -82,11 +79,7 @@ def make_stones(field: dict):
         return None
 
     stones = config.Stones()
-
-    stones.density = data.get('density')
-    if stones.density is None:
-        raise ParserError("Missing element 'density' as children of 'stones'")
-
+    stones.density = data.get('density', stones.density)
     return stones
 
 

@@ -29,12 +29,12 @@ class Noise:
 class Weed:
     name: str = None
     plant_type: str = None
-    density: float = None
+    density: float = 5.
 
 
 @dataclass
 class Stones:
-    density: float = None
+    density: float = 5.
 
 
 @dataclass
