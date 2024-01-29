@@ -1,0 +1,22 @@
+output:
+  blender:
+    type: blender_file
+    filename: test4.blend
+
+field:
+  headland_width: 1.
+  bed_width: 0.3
+  plant_distance: .2
+  plants_count: 10
+  plant_type: maize
+  row_distance: 0.
+
+  beds:
+    bed1: { plant_height: .05 }
+    bed2: { plant_height: .10 }
+    bed3: { plant_height: .15 }
+    bed4: { plant_height: .20 }
+    bed5: { plant_height: .25 }
+    bed6: { plant_height: .30 }
+    bed7: { plant_height: .35 }
+    bed8: { plant_height: .40 }

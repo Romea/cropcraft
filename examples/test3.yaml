@@ -1,4 +1,4 @@
-output_enabled: [gazebo]
+# output_enabled: [gazebo]
 output:
   gazebo:
     type: gazebo_model

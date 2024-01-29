@@ -33,7 +33,7 @@ def remove_all():
 
 
 def create_camera(look_at: mathutils.Vector):
-    camera_pos = mathutils.Vector((-10., look_at.y, 7.))
+    camera_pos = mathutils.Vector((-13., look_at.y, 6.))
     look_dir = camera_pos - look_at
     look_quaternion = look_dir.to_track_quat('Z', 'Y')
 

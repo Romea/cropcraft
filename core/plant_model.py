@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import typing
 
 
 @dataclass
@@ -13,13 +14,19 @@ class PlantGroup:
     type: str
     name: str
     min_height: float
-    models: list
+    models: typing.List[PlantModel]
 
     def __hash__(self):
         return hash((self.type, self.name))
 
     def full_name(self):
         return f"{self.type}_{self.name}"
+
+    def average_height(self):
+        sum = 0.
+        for model in self.models:
+            sum += model.height
+        return sum / len(self.models) if len(self.models) else self.min_height
 
 
 @dataclass

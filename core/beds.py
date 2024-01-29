@@ -71,6 +71,9 @@ class Beds:
         scales = []
         rotations = []
 
+        plant_group = get_plant_group(bed.plant_type, bed.plant_height)
+        group_height = plant_group.average_height()
+
         for bed_i, row_i, plant_i in id_tuples:
             if random.random() < noise.missing:
                 continue
@@ -84,7 +87,9 @@ class Beds:
             y += random.normalvariate(0, noise.position)
             vertices.append((x, y, z))
 
-            scales.append(random.lognormvariate(0, noise.scale))
+            scale = bed.plant_height / group_height
+            scale *= random.lognormvariate(0, noise.scale)
+            scales.append(scale)
 
             yaw = random.uniform(0, math.tau)
             pitch = random.normalvariate(0, noise.tilt)

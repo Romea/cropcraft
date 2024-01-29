@@ -1,0 +1,40 @@
+output:
+  blender:
+    type: blender_file
+    filename: multiple.blend
+
+field:
+  headland_width: 8.
+  bed_width: 1.57
+  y_function: '.2 * sin(x * tau / 15.)'
+  plants_count: 100
+  beds_count: 1
+  plant_distance: .15
+
+  beds:
+    bed1:  
+      plant_type: bean
+      plant_height: .12
+      row_distance: .4
+      rows_count: 4
+    bed2:  
+      plant_type: maize
+      plant_height: .45
+      row_distance: .785
+      rows_count: 2
+    bed3:  
+      plant_type: bean
+      plant_height: .25
+      row_distance: .5233
+      rows_count: 3
+    bed4:  
+      plant_type: maize
+      plant_height: .12
+      row_distance: .45
+      rows_count: 4
+
+  noise:
+    position: .008
+    tilt: .05
+    missing: .15
+    scale: .10

@@ -1,18 +1,14 @@
-output_enabled: [blender, gazebo]
 output:
-  gazebo:
-    type: gazebo_model
-    name: test2
-
   blender:
     type: blender_file
-    filename: test2.blend
+    filename: associative.blend
 
 field:
-  headland_width: 4.
-
+  headland_width: 8.
   bed_width: 1.57
+  plants_count: 100
   plant_distance: .15
+  rows_count: 2
   y_function: '.2 * sin(x * tau / 15.)'
   shift_next_bed: false
 
@@ -22,24 +18,21 @@ field:
       plant_height: .22
       row_distance: .785
       plants_count: 100
-      rows_count: 2
-      beds_count: 3
+      beds_count: 4
 
     bed2:  
       plant_type: bean
-      plant_height: .15
+      plant_height: .13
       row_distance: .285
       plants_count: 100
-      rows_count: 2
-      beds_count: 3
+      beds_count: 4
 
     bed3:  
       plant_type: bean
       plant_height: .14
       row_distance: .285
       plants_count: 100
-      rows_count: 2
-      beds_count: 2
+      beds_count: 3
       offset: [0., .785, 0.]
 
   noise:
@@ -47,19 +40,3 @@ field:
     tilt: .05
     missing: .15
     scale: .10
-
-  weeds:
-    portulaca:
-      plant_type: portulaca
-      density: 0.1
-
-    polygonum:
-      plant_type: polygonum
-      density: 0.1
-
-    taraxacum:
-      plant_type: taraxacum
-      density: 0.1
-
-  stones:
-    density: 0.1

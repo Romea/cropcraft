@@ -32,7 +32,7 @@ def main(argv: list):
     ground.create_stones()
 
     look_at = beds.get_center_pos()
-    look_at.x = 6.
+    look_at.x = 5.
     core.base.create_camera(look_at)
 
     for output in cfg.outputs:
