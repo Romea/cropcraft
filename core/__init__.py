@@ -1,5 +1,5 @@
 from . import base
-from . import beds
+from . import swaths
 from . import ground
 from . import plant_model
 from . import output

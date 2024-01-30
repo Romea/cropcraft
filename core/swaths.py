@@ -9,27 +9,27 @@ from .plant_model import get_plant_group
 from . import config
 
 
-class Beds:
+class Swaths:
 
     def __init__(self, field: config.Field):
         self.field = field
-        self.bed_plant_groups = {}
-        self.cur_bed_offset = 0.
+        self.swath_plant_groups = {}
+        self.cur_swath_offset = 0.
         self.center_pos = mathutils.Vector()
         self.width = 0.
         self.length = 0.
 
     def load_plants(self):
         groups = set()
-        for bed in self.field.beds:
-            group = get_plant_group(bed.plant_type, bed.plant_height)
+        for swath in self.field.swaths:
+            group = get_plant_group(swath.plant_type, swath.plant_height)
 
             if not group:
                 raise RuntimeError("Error: plant type '{}' and height '{}' is unknown.".format(
-                    bed.plant_type, bed.plant_height))
+                    swath.plant_type, swath.plant_height))
 
             groups.add(group)
-            self.bed_plant_groups[bed.name] = group
+            self.swath_plant_groups[swath.name] = group
 
         plants_collection = bpy.data.collections['plants']
 
@@ -51,43 +51,43 @@ class Beds:
                     forward_axis='Y',
                 )
 
-    def create_beds(self):
+    def create_swaths(self):
         collection = bpy.data.collections['generated']
 
-        for bed in self.field.beds:
-            bed_object = self.create_bed(bed)
-            collection.objects.link(bed_object)
+        for swath in self.field.swaths:
+            swath_object = self.create_swath(swath)
+            collection.objects.link(swath_object)
 
-    def create_bed(self, bed: config.Bed):
+    def create_swath(self, swath: config.Swath):
         noise = self.field.noise
-        row_offset = (bed.bed_width - (bed.rows_count - 1) * bed.row_distance) / 2.
+        row_offset = (swath.swath_width - (swath.rows_count - 1) * swath.row_distance) / 2.
 
         id_tuples = itertools.product(
-            range(bed.beds_count),
-            range(bed.rows_count),
-            range(bed.plants_count),
+            range(swath.swaths_count),
+            range(swath.rows_count),
+            range(swath.plants_count),
         )
         vertices = []
         scales = []
         rotations = []
 
-        plant_group = get_plant_group(bed.plant_type, bed.plant_height)
+        plant_group = get_plant_group(swath.plant_type, swath.plant_height)
         group_height = plant_group.average_height()
 
-        for bed_i, row_i, plant_i in id_tuples:
+        for swath_i, row_i, plant_i in id_tuples:
             if random.random() < noise.missing:
                 continue
 
-            x = bed.offset[0] + plant_i * bed.plant_distance
-            y = bed.offset[1] + self.cur_bed_offset + bed_i * bed.bed_width + row_offset
-            y += bed.y_function(x) + row_i * bed.row_distance
-            z = bed.offset[2]
+            x = swath.offset[0] + plant_i * swath.plant_distance
+            y = swath.offset[1] + self.cur_swath_offset + swath_i * swath.swath_width + row_offset
+            y += swath.y_function(x) + row_i * swath.row_distance
+            z = swath.offset[2]
 
             x += random.normalvariate(0, noise.position)
             y += random.normalvariate(0, noise.position)
             vertices.append((x, y, z))
 
-            scale = bed.plant_height / group_height
+            scale = swath.plant_height / group_height
             scale *= random.lognormvariate(0, noise.scale)
             scales.append(scale)
 
@@ -96,17 +96,17 @@ class Beds:
             roll = random.normalvariate(0, noise.tilt)
             rotations.extend([roll, pitch, yaw])
 
-        object = self.create_bed_object(vertices, bed.name, scales, rotations)
+        object = self.create_swath_object(vertices, swath.name, scales, rotations)
 
-        cur_width = bed.beds_count * bed.bed_width
-        self.width = max(self.width, self.cur_bed_offset + cur_width)
-        self.length = max(self.length, (bed.plants_count - 1) * bed.plant_distance)
-        if bed.shift_next_bed:
-            self.cur_bed_offset += cur_width
+        cur_width = swath.swaths_count * swath.swath_width
+        self.width = max(self.width, self.cur_swath_offset + cur_width)
+        self.length = max(self.length, (swath.plants_count - 1) * swath.plant_distance)
+        if swath.shift_next_swath:
+            self.cur_swath_offset += cur_width
 
         return object
 
-    def create_bed_object(self, vertices: list, name: str, scales, rotations):
+    def create_swath_object(self, vertices: list, name: str, scales, rotations):
         mesh = bpy.data.meshes.new(name)
         mesh.from_pydata(vertices, edges=[], faces=[])
         mesh.update()
@@ -122,11 +122,11 @@ class Beds:
         modifier = object.modifiers.new(name, 'NODES')
         modifier.node_group = bpy.data.node_groups['crops']
 
-        collection_name = self.bed_plant_groups[name].full_name()
+        collection_name = self.swath_plant_groups[name].full_name()
         plant_collection = bpy.data.collections[collection_name]
         modifier['Socket_1'] = plant_collection
 
-        # apply plant material to the bed object
+        # apply plant material to the swath object
         object.active_material = plant_collection.objects[0].active_material.copy()
 
         return object

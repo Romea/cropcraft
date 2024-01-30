@@ -6,16 +6,16 @@ output:
 field:
   headland_width: 8.
 
-  beds:
-    bed1:  
+  swaths:
+    swath1:  
       plant_type: bean
       plant_height: .17
       plant_distance: .15
       row_distance: .4
       plants_count: 100
       rows_count: 4
-      beds_count: 4
-      bed_width: 1.57
+      swaths_count: 4
+      swath_width: 1.57
       y_function: '.2 * sin(x * tau / 15.)'
 
   noise:

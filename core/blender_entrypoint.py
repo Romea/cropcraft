@@ -20,18 +20,18 @@ def main(argv: list):
 
     core.base.create_blender_context()
     
-    beds = core.beds.Beds(cfg.field)
-    beds.load_plants()
-    beds.create_beds()
+    swaths = core.swaths.Swaths(cfg.field)
+    swaths.load_plants()
+    swaths.create_swaths()
 
-    ground = core.ground.Ground(cfg.field, beds)
+    ground = core.ground.Ground(cfg.field, swaths)
     ground.load_weeds()
     ground.load_stones()
     ground.create_plane()
     ground.create_weeds()
     ground.create_stones()
 
-    look_at = beds.get_center_pos()
+    look_at = swaths.get_center_pos()
     look_at.x = 5.
     core.base.create_camera(look_at)
 

@@ -11,35 +11,35 @@ output:
 field:
   headland_width: 4.
 
-  bed_width: 1.57
+  swath_width: 1.57
   plant_distance: .15
   y_function: '.2 * sin(x * tau / 15.)'
-  shift_next_bed: false
+  shift_next_swath: false
 
-  beds:
-    bed1:  
+  swaths:
+    swath1:  
       plant_type: maize
       plant_height: .22
       row_distance: .785
       plants_count: 100
       rows_count: 2
-      beds_count: 3
+      swaths_count: 3
 
-    bed2:  
+    swath2:  
       plant_type: bean
       plant_height: .15
       row_distance: .285
       plants_count: 100
       rows_count: 2
-      beds_count: 3
+      swaths_count: 3
 
-    bed3:  
+    swath3:  
       plant_type: bean
       plant_height: .14
       row_distance: .285
       plants_count: 100
       rows_count: 2
-      beds_count: 2
+      swaths_count: 2
       offset: [0., .785, 0.]
 
   noise:

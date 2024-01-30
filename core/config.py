@@ -2,17 +2,17 @@ from dataclasses import dataclass, field
 import typing
 
 @dataclass
-class Bed:
+class Swath:
     name: str = None
     plant_type: str = None
     plant_height: float = None
     plant_distance: float = None
-    bed_width: float = None
+    swath_width: float = None
     row_distance: float = None
     plants_count: int = None
     rows_count: int = 1
-    beds_count: int = 1
-    shift_next_bed: bool = True
+    swaths_count: int = 1
+    shift_next_swath: bool = True
     offset: typing.List[float] = field(default_factory=lambda: [0., 0., 0.])
     y_function: typing.Callable[float, float] = lambda x: 0.
 
@@ -42,9 +42,9 @@ class Field:
     headland_width: float = 4.
     scattering_extra_width: float = 1.
 
-    default: Bed = None
+    default: Swath = None
     noise: Noise = None
-    beds: typing.List[Bed] = None
+    swaths: typing.List[Swath] = None
     weeds: typing.List[Weed] = field(default_factory=lambda: [])
     stones: Stones = None
 

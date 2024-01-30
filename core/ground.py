@@ -3,7 +3,7 @@ import bpy
 import random
 
 from . import config
-from .beds import Beds
+from .swaths import Swaths
 
 
 def create_plane_object(name: str, width: float, length: float, offset: float):
@@ -25,9 +25,9 @@ def create_plane_object(name: str, width: float, length: float, offset: float):
 
 class Ground:
 
-    def __init__(self, field: config.Field, beds: Beds):
+    def __init__(self, field: config.Field, swaths: Swaths):
         self.field = field
-        self.beds = beds
+        self.swaths = swaths
 
     def load_weeds(self):
         weeds_collection = bpy.data.collections['weeds']
@@ -73,7 +73,7 @@ class Ground:
             )
 
     def create_plane(self):
-        object = create_plane_object('ground', self.beds.width, self.beds.length,
+        object = create_plane_object('ground', self.swaths.width, self.swaths.length,
                                      self.field.headland_width)
 
         # create material
@@ -108,7 +108,7 @@ class Ground:
             self.create_weed(weed)
 
     def create_weed(self, weed: config.Weed):
-        object = create_plane_object(weed.name, self.beds.width, self.beds.length,
+        object = create_plane_object(weed.name, self.swaths.width, self.swaths.length,
                                      self.field.scattering_extra_width)
         weed_collection = bpy.data.collections[weed.plant_type]
 
@@ -130,7 +130,7 @@ class Ground:
         if self.field.stones is None:
             return
 
-        object = create_plane_object('stones', self.beds.width, self.beds.length,
+        object = create_plane_object('stones', self.swaths.width, self.swaths.length,
                                      self.field.scattering_extra_width)
         stones_collection = bpy.data.collections['stones']
 
