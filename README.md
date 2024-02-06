@@ -1,22 +1,23 @@
 # CropCraft
 
-CropCraft is python script that allows to generate 3D models of crop fields specialized for
+CropCraft is a python script that allows to generate 3D models of crop fields specialized for
 real-time simulation of robotics application.
 
 ![Example of field](doc/imgs/field_demo.png)
 
 * Designed for real-time simulation
 * Suitable for use with LiDARs and cameras
-* Highly configurable (text file)
-* Provide ground truth data
+* Highly configurable (YAML file)
+* Provide ground truth data (identify plant types in LiDAR data)
 
 
 ## Requirements
 
 This program uses blender as a backend.
-You can dowload it on the [official website](https://www.blender.org/download/).
+It is an 3D modeling software that you can dowload from the
+[official website](https://www.blender.org/download/).
 You also have to check that it is launchable from the command line.
-It means that the `PATH` environment variable contains the directory of blender executable.
+It means that blender must be accessible using the `PATH` environment variable.
 
 You also need to install some python requirements:
 ```
