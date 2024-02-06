@@ -3,10 +3,15 @@
 CropCraft is python script that allows to generate 3D models of crop fields specialized for
 real-time simulation of robotics application.
 
-![Example of field](doc/field_transparent.png)
+![Example of field](doc/imgs/field_demo.png)
+
+* Designed for real-time simulation
+* Suitable for use with LiDARs and cameras
+* Highly configurable (text file)
+* Provide ground truth data
 
 
-## Installation
+## Requirements
 
 This program uses blender as a backend.
 You can dowload it on the [official website](https://www.blender.org/download/).
