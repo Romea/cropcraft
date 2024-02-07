@@ -1,0 +1,44 @@
+output_enabled: [blender, gazebo]
+output:
+  blender:
+    type: blender_file
+    filename: mixed_field.blend
+  gazebo:
+    type: gazebo_model
+    name: mixed_field
+
+field:
+  headland_width: 8.
+  swath_width: 1.57
+  y_function: '.2 * sin(x * tau / 15.)'
+  plants_count: 100
+  swaths_count: 2
+  plant_distance: .15
+
+  swaths:
+    swath1:  
+      plant_type: bean
+      plant_height: .12
+      row_distance: .52
+      rows_count: 3
+    swath2:  
+      plant_type: maize
+      plant_height: .40
+      row_distance: .785
+      rows_count: 2
+
+  noise:
+    position: .008
+    tilt: .05
+    missing: .15
+    scale: .10
+
+  weeds:
+    portulaca:
+      plant_type: portulaca
+    polygonum:
+      plant_type: polygonum
+    taraxacum:
+      plant_type: taraxacum
+
+  stones: {}

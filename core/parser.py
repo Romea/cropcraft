@@ -17,8 +17,6 @@ class ParserError(Exception):
     pass
 
 
-
-
 def make_swath(name: str, data: dict, default=config.Swath(), allow_none=False):
     swath = config.Swath()
     swath.name = name
