@@ -10,10 +10,11 @@ output:
 field:
   headland_width: 8.
   swath_width: 1.57
-  y_function: '.2 * sin(x * tau / 15.)'
+  y_function: '1.4 * sin(x * tau / 15.)'
   plants_count: 100
-  swaths_count: 2
+  swaths_count: 10
   plant_distance: .15
+  shift_next_swath: false
 
   swaths:
     swath1:  
@@ -26,6 +27,7 @@ field:
       plant_height: .40
       row_distance: .785
       rows_count: 2
+      offset: [0., .3, 0.]
 
   noise:
     position: .008
@@ -36,9 +38,9 @@ field:
   weeds:
     portulaca:
       plant_type: portulaca
-    polygonum:
-      plant_type: polygonum
-    taraxacum:
-      plant_type: taraxacum
+    # polygonum:
+    #   plant_type: polygonum
+    # taraxacum:
+    #   plant_type: taraxacum
 
-  stones: {}
+  # stones: {}

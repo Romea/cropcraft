@@ -63,6 +63,24 @@ Here is the image corresponding to this configuration:
 
 ### The `field` block
 
+```yaml
+field:
+  headland_width: 7.0
+  scattering_extra_width: 1.5
+  swaths:
+    my_swath1:
+      ...
+    my_swath2:
+      ...
+  noise: {}
+  weeds:
+    weed1:
+      ...
+    weed2:
+      ...
+  stones: {}
+```
+
 * `headland_width` (default: 4.0, in meters): an extra band of ground around the field.
 * `scattering_extra_width` (default: 1.0, in meters): an extra band around the field used to
   generate scattering.
@@ -76,6 +94,21 @@ It is also possible to specify the parameters of the swath block directly in the
 In this case, these parameters are used as default values for the swaths.
 
 #### The swath block
+
+```yaml
+my_swath1:
+  plant_type: bean
+  plant_height: .12
+  row_distance: .52
+  rows_count: 3
+  swath_width: 1.57
+  plants_count: 100
+  swaths_count: 10
+  plant_distance: .15
+  shift_next_swath: false
+  offset: [0., .3, 0.]
+  y_function: '1.4 * sin(x * tau / 15.)'
+```
 
 It corresponds to the element of the `swaths` block of the `field`.
 The key corresponds to the name of the swath.
@@ -104,6 +137,14 @@ The key corresponds to the name of the swath.
 
 #### The `noise` block
 
+```yaml
+noise:
+  position: .008
+  tilt: .05
+  scale: .10
+  missing: .15
+```
+
 * `position` (in meters): standard deviation of a centered normal distribution.
   It is applied on the _x_ and _y_ axis of the position.
 * `tilt` (in radians): standard deviation of a centered normal distribution.
@@ -113,6 +154,16 @@ The key corresponds to the name of the swath.
 
 #### The weeds block
 
+```yaml
+weeds:
+  test_weed1:
+    plant_type: portulaca
+    density: 3.5
+  test_weed2:
+    plant_type: polygonum
+    density: 4.9
+```
+
 The `weeds` block of the `field` contains several key/value that correspond to a name and a
 scattering configuration block.
 
@@ -121,10 +172,26 @@ scattering configuration block.
 
 #### The `stones` block
 
+```yaml
+stones:
+  density: 3.8
+```
+
 * `density`: a float that control the quantity of stones that is generated
 
 
 ### The `output` block
+
+```yaml
+output_enabled: [out1]
+output:
+  out1:
+    type: blender_file
+    ...
+  out2:
+    type: gazebo_model
+    ...
+```
 
 The `output` block contains several key/value that correspond to a name that can be referenced by
 `output_enabled` and a configuration block:
@@ -135,11 +202,25 @@ The other parameters of the output block depends of the `type`.
 
 #### Output type `blender_file`
 
+```yaml
+out1:
+  type: blender_file
+  filename: small_field.blend
+```
+
 * `filename`: file name (and optionally a relative path) of the generated blender file
 
 #### Output type `gazebo_model`
 
-* `dirname`: name (and optionally a relative path) of the gazebo model directory to create
+```yaml
+out2:
+  type: gazebo_model
+  name: maize_field
+  author: John Smith
+  use_absolute_path: false
+```
+
+* `name`: name (and optionally a relative path) of the gazebo model directory to create
 * `author`: a string to add in the author field of the model config file
 * `use_absolute_path` (default: false): a boolean to enable/disable use of absolute path for
   resources used in the SDF file.
