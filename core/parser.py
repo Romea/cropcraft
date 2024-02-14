@@ -1,12 +1,17 @@
 import importlib
+from importlib.util import find_spec
 import sys
 
-if not importlib.util.find_spec('yaml'):
+if not find_spec('yaml'):
     import pip
     pip.main(['install', 'pyyaml', '--user'])
 
-importlib.invalidate_caches()
-yaml = importlib.import_module('yaml')
+    # refresh sys.path
+    import site
+    from importlib import reload
+    reload(site)
+
+import yaml
 
 from . import config
 from . import output as output_classes
