@@ -18,6 +18,7 @@ class Swaths:
         self.center_pos = mathutils.Vector()
         self.width = 0.
         self.length = 0.
+        self.assets_path = os.path.abspath('assets')
 
     def load_plants(self):
         groups = set()
@@ -46,7 +47,7 @@ class Swaths:
             for model in group.models:
                 view_layer.active_layer_collection = plant_layer_coll
                 bpy.ops.wm.obj_import(
-                    filepath=os.path.join('assets', 'plants', group.type, model.filename),
+                    filepath=os.path.join(self.assets_path, 'plants', group.type, model.filename),
                     up_axis='Z',
                     forward_axis='Y',
                 )

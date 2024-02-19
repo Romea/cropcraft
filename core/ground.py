@@ -28,6 +28,7 @@ class Ground:
     def __init__(self, field: config.Field, swaths: Swaths):
         self.field = field
         self.swaths = swaths
+        self.assets_path = os.path.abspath('assets')
 
     def load_weeds(self):
         weeds_collection = bpy.data.collections['weeds']
@@ -36,7 +37,7 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
 
-        weeds_path = os.path.join('assets', 'weeds')
+        weeds_path = os.path.join(self.assets_path, 'weeds')
 
         for group_name in os.listdir(weeds_path):
             collection = bpy.data.collections.new(group_name)
@@ -60,7 +61,7 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         stones_layer_coll = scene_layer_coll.children['resources'].children['stones']
 
-        stones_path = os.path.join('assets', 'stones')
+        stones_path = os.path.join(self.assets_path, 'stones')
         models = filter(lambda x: x.endswith('.obj'), os.listdir(stones_path))
 
         for model in models:
@@ -81,7 +82,7 @@ class Ground:
         mat.use_nodes = True
         bsdf = mat.node_tree.nodes["Principled BSDF"]
         tex_img = mat.node_tree.nodes.new('ShaderNodeTexImage')
-        tex_img.image = bpy.data.images.load(os.path.join('assets', 'textures', 'dirt.jpg'))
+        tex_img.image = bpy.data.images.load(os.path.realpath(os.path.join(self.assets_path, 'textures', 'dirt.jpg')))
         mat.node_tree.links.new(bsdf.inputs['Base Color'], tex_img.outputs['Color'])
         bsdf.inputs['Roughness'].default_value = 0.9
         object.active_material = mat
