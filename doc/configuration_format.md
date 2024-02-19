@@ -67,6 +67,7 @@ Here is the image corresponding to this configuration:
 field:
   headland_width: 7.0
   scattering_extra_width: 1.5
+  random_seed: 344567809264
   swaths:
     my_swath1:
       ...
@@ -84,6 +85,11 @@ field:
 * `headland_width` (default: 4.0, in meters): an extra band of ground around the field.
 * `scattering_extra_width` (default: 1.0, in meters): an extra band around the field used to
   generate scattering.
+* `random_seed` (optional): integer used to initialize the random number generator.
+  If this element is specified, the generated environment will always be the same if the program is
+  executed several times with no change in its configuration.
+  The program outputs its seed in order to use it in a configuration file and generate a similar
+  environment.
 * `swaths`: a block that contains the configuration of each swath to generate.
   The key correspond to the name of the swath and the value is a swath block (described below).
 * `noise` (optional): a block that contains the noise configuration.

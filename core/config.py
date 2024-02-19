@@ -41,6 +41,7 @@ class Stones:
 class Field:
     headland_width: float = 4.
     scattering_extra_width: float = 1.
+    seed: int = None
 
     default: Swath = None
     noise: Noise = None

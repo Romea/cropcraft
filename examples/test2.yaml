@@ -10,6 +10,7 @@ output:
 
 field:
   headland_width: 4.
+  random_seed: 9473621
 
   swath_width: 1.57
   plant_distance: .15

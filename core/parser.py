@@ -110,6 +110,7 @@ def make_field(cfg: dict):
     field.headland_width = field_data.get('headland_width', field.headland_width)
     field.scattering_extra_width = field_data.get('scattering_extra_width',
                                                   field.scattering_extra_width)
+    field.seed = field_data.get('random_seed')
 
     return field
 
