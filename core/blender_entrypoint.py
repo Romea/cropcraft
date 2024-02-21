@@ -31,7 +31,7 @@ def configure_random_seed(field: core.config.Field):
 def main(argv: list):
     args = argv[argv.index('--') + 1:]
     config_file = args[0]
-    output_dir = args[1] if len(args) >= 2 else '.'
+    output_dir = args[1]
 
     try:
         cfg = core.parser.load_yaml_config(config_file)

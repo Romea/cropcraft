@@ -16,6 +16,7 @@ import random
 
 from . import config
 from .swaths import Swaths
+from .model_import import obj_import
 
 
 def create_plane_object(name: str, width: float, length: float, offset: float):
@@ -61,12 +62,7 @@ class Ground:
 
             for model in models:
                 view_layer.active_layer_collection = group_layer_coll
-                bpy.ops.wm.obj_import(
-                    filepath=os.path.join(group_path, model),
-                    up_axis='Z',
-                    forward_axis='Y',
-                    use_split_objects=False,
-                )
+                obj_import(os.path.join(group_path, model))
 
     def load_stones(self):
         view_layer = bpy.context.view_layer
@@ -78,12 +74,7 @@ class Ground:
 
         for model in models:
             view_layer.active_layer_collection = stones_layer_coll
-            bpy.ops.wm.obj_import(
-                filepath=os.path.join(stones_path, model),
-                up_axis='Z',
-                forward_axis='Y',
-                use_split_objects=False,
-            )
+            obj_import(os.path.join(stones_path, model))
 
     def create_plane(self):
         object = create_plane_object('ground', self.swaths.width, self.swaths.length,

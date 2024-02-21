@@ -19,6 +19,7 @@ import math
 
 from .plant_model import get_plant_group
 from . import config
+from .model_import import obj_import
 
 
 class Swaths:
@@ -58,11 +59,7 @@ class Swaths:
 
             for model in group.models:
                 view_layer.active_layer_collection = plant_layer_coll
-                bpy.ops.wm.obj_import(
-                    filepath=os.path.join(self.assets_path, 'plants', group.type, model.filename),
-                    up_axis='Z',
-                    forward_axis='Y',
-                )
+                obj_import(os.path.join(self.assets_path, 'plants', group.type, model.filename))
 
     def create_swaths(self):
         collection = bpy.data.collections['generated']
