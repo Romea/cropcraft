@@ -123,6 +123,10 @@ class Ground:
         node.node_group = bpy.data.node_groups['scattering']
         node['Socket_3'] = weed_collection
         node['Socket_4'] = self.rand.randint(-10000, 10000)
+        node['Socket_5'] = weed.distance_min
+        node['Socket_6'] = weed.density
+        node['Socket_7'] = weed.noise_scale
+        node['Socket_8'] = weed.noise_offset
 
         # apply instance material to the object
         for material in weed_collection.objects[0].data.materials:
@@ -135,6 +139,8 @@ class Ground:
         if self.field.stones is None:
             return
 
+        stones = self.field.stones
+
         object = create_plane_object('stones', self.swaths.width, self.swaths.length,
                                      self.field.scattering_extra_width)
         stones_collection = bpy.data.collections['stones']
@@ -145,6 +151,10 @@ class Ground:
         node.node_group = bpy.data.node_groups['stones_scattering']
         node['Socket_2'] = stones_collection
         node['Socket_3'] = self.rand.randint(-10000, 10000)
+        node['Socket_4'] = stones.distance_min
+        node['Socket_5'] = stones.density
+        node['Socket_6'] = stones.noise_scale
+        node['Socket_7'] = stones.noise_offset
 
         # apply instance material to the object
         for material in stones_collection.objects[0].data.materials:

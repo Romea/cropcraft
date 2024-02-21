@@ -85,6 +85,11 @@ def make_weed(name: str, data: dict):
         raise ParserError(f"Missing element 'plant_type' as children of '{name}'")
 
     weed.density = data.get('density', weed.density)
+    weed.distance_min = data.get('distance_min', weed.distance_min)
+    weed.noise_scale = data.get('noise_scale', weed.noise_scale)
+    weed.noise_offset = data.get('noise_offset', weed.noise_offset)
+    if weed.noise_offset < -1. or weed.noise_offset > 1.:
+        raise ParserError(f"The '{name}.noise_offset' value must be between -1. and 1.")
     return weed
 
 
@@ -95,6 +100,11 @@ def make_stones(field: dict):
 
     stones = config.Stones()
     stones.density = data.get('density', stones.density)
+    stones.distance_min = data.get('distance_min', stones.distance_min)
+    stones.noise_scale = data.get('noise_scale', stones.noise_scale)
+    stones.noise_offset = data.get('noise_offset', stones.noise_offset)
+    if stones.noise_offset < -1. or stones.noise_offset > 1.:
+        raise ParserError(f"The 'stones.noise_offset' value must be between -1. and 1.")
     return stones
 
 

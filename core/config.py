@@ -42,11 +42,17 @@ class Weed:
     name: str = None
     plant_type: str = None
     density: float = 5.
+    distance_min: float = 0.12
+    noise_scale: float = 0.36
+    noise_offset: float = 0.1
 
 
 @dataclass
 class Stones:
-    density: float = 5.
+    density: float = 50.
+    distance_min: float = 0.04
+    noise_scale: float = 0.36
+    noise_offset: float = 0.23
 
 
 @dataclass

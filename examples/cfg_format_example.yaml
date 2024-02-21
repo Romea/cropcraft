@@ -36,9 +36,15 @@ field:
   weeds:
     portulaca:
       plant_type: portulaca
+      density: 3.
     polygonum:
       plant_type: polygonum
+      distance_min: 0.16
     taraxacum:
       plant_type: taraxacum
+      density: 10.
+      noise_offset: -0.1
 
-  stones: {}
+  stones:
+    density: 60.
+    noise_scale: 0.24

@@ -39,12 +39,18 @@ field:
   weeds:
     portulaca:
       plant_type: portulaca
+      density: 3.
     polygonum:
       plant_type: polygonum
+      distance_min: 0.16
     taraxacum:
       plant_type: taraxacum
+      density: 10.
+      noise_offset: -0.1
 
-  stones: {}
+  stones:
+    density: 60.
+    noise_scale: 0.24
 ```
 
 Here is the image corresponding to this configuration:
@@ -165,6 +171,9 @@ weeds:
   test_weed1:
     plant_type: portulaca
     density: 3.5
+    distance_min: 0.15
+    noise_scale: 0.29
+    noise_offset: 0.21
   test_weed2:
     plant_type: polygonum
     density: 4.9
@@ -175,15 +184,32 @@ scattering configuration block.
 
 * `plant_type`: a string that corresponds to the name of the weed model
 * `density`: a float that control the quantity of weeds that is generated
+* `distance_min` (in meters, default: 0.12): minimal distance between generated weeds
+* `noise_scale` (default: 0.36): a float that control the size of the roughness of the random
+  density map.
+  If the value is smaller, the blob will be bigger.
+* `noise_offset` (between -1.0 and 1.0, default: 0.1): a float that control the thickness of the
+  empty area.
+  If the value is smaller, the empty area will be bigger.
 
 #### The `stones` block
 
 ```yaml
 stones:
-  density: 3.8
+  density: 50.0
+  distance_min: 0.04
+  noise_scale: 0.36
+  noise_offset: 0.23
 ```
 
 * `density`: a float that control the quantity of stones that is generated
+* `distance_min` (in meters, default: 0.04): minimal distance between generated stones
+* `noise_scale` (default: 0.36): a float that control the size of the roughness of the random
+  density map.
+  If the value is smaller, the blob will be bigger.
+* `noise_offset` (between -1.0 and 1.0, default: 0.23): a float that control the thickness of the
+  empty area.
+  If the value is smaller, the empty area will be bigger.
 
 
 ### The `output` block
