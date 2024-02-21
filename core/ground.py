@@ -42,6 +42,7 @@ class Ground:
         self.field = field
         self.swaths = swaths
         self.assets_path = os.path.abspath('assets')
+        self.rand = random.Random(random.getrandbits(32))
 
     def load_weeds(self):
         weeds_collection = bpy.data.collections['weeds']
@@ -121,7 +122,7 @@ class Ground:
         node = object.modifiers.new(weed.name, 'NODES')
         node.node_group = bpy.data.node_groups['scattering']
         node['Socket_3'] = weed_collection
-        node['Socket_4'] = random.randint(-10000, 10000)
+        node['Socket_4'] = self.rand.randint(-10000, 10000)
 
         # apply instance material to the object
         for material in weed_collection.objects[0].data.materials:
@@ -143,7 +144,7 @@ class Ground:
         node = object.modifiers.new('stones', 'NODES')
         node.node_group = bpy.data.node_groups['stones_scattering']
         node['Socket_2'] = stones_collection
-        node['Socket_3'] = random.randint(-10000, 10000)
+        node['Socket_3'] = self.rand.randint(-10000, 10000)
 
         # apply instance material to the object
         for material in stones_collection.objects[0].data.materials:

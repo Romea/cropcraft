@@ -22,7 +22,7 @@ import core
 
 def configure_random_seed(field: core.config.Field):
     if field.seed is None:
-        seed = random.randint(0, 1e12)
+        seed = random.getrandbits(32)
         field.seed = seed
 
     random.seed(field.seed)

@@ -32,6 +32,7 @@ class Swaths:
         self.width = 0.
         self.length = 0.
         self.assets_path = os.path.abspath('assets')
+        self.rand = random.Random(random.getrandbits(32))
 
     def load_plants(self):
         groups = set()
@@ -85,7 +86,7 @@ class Swaths:
         group_height = plant_group.average_height()
 
         for swath_i, row_i, plant_i in id_tuples:
-            if random.random() < noise.missing:
+            if self.rand.random() < noise.missing:
                 continue
 
             x = swath.offset[0] + plant_i * swath.plant_distance
@@ -93,17 +94,17 @@ class Swaths:
             y += swath.y_function(x) + row_i * swath.row_distance
             z = swath.offset[2]
 
-            x += random.normalvariate(0, noise.position)
-            y += random.normalvariate(0, noise.position)
+            x += self.rand.normalvariate(0, noise.position)
+            y += self.rand.normalvariate(0, noise.position)
             vertices.append((x, y, z))
 
             scale = swath.plant_height / group_height
-            scale *= random.lognormvariate(0, noise.scale)
+            scale *= self.rand.lognormvariate(0, noise.scale)
             scales.append(scale)
 
-            yaw = random.uniform(0, math.tau)
-            pitch = random.normalvariate(0, noise.tilt)
-            roll = random.normalvariate(0, noise.tilt)
+            yaw = self.rand.uniform(0, math.tau)
+            pitch = self.rand.normalvariate(0, noise.tilt)
+            roll = self.rand.normalvariate(0, noise.tilt)
             rotations.extend([roll, pitch, yaw])
 
         object = self.create_swath_object(vertices, swath.name, scales, rotations)
