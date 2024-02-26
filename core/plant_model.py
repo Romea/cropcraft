@@ -64,12 +64,17 @@ plant_groups = {
             PlantModel('maize_big_3.obj', .45, .30),
         ]),
     ],
-    'vine': [
-        PlantGroup('vine', 'medium', .0, [
+    'vine1': [
+        PlantGroup('vine1', 'medium', .0, [
             PlantModel('vine_01.obj', 1.4, 1.2),
             PlantModel('vine_02.obj', 1.4, 1.2),
             PlantModel('vine_03.obj', 1.4, 1.2),
             PlantModel('vine_04.obj', 1.4, 1.2),
+        ]),
+    ],
+    'vine2': [
+        PlantGroup('vine2', 'medium', .0, [
+            PlantModel('vine_01.obj', 1.4, 1.2),
         ]),
     ],
 }

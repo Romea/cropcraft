@@ -17,7 +17,7 @@ field:
 
   swaths:
     swath1:  
-      plant_type: vine
+      plant_type: vine1
       plant_height: 1.4
       rows_count: 1
       aligned: true
