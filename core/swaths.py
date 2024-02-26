@@ -102,7 +102,10 @@ class Swaths:
             scale *= self.rand.lognormvariate(0, noise.scale)
             scales.append(scale)
 
-            yaw = self.rand.uniform(0, math.tau)
+            if swath.aligned:
+                yaw = self.rand.choice([0., math.pi])
+            else:
+                yaw = self.rand.uniform(0, math.tau)
             pitch = self.rand.normalvariate(0, noise.tilt)
             roll = self.rand.normalvariate(0, noise.tilt)
             rotations.extend([roll, pitch, yaw])

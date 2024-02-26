@@ -54,6 +54,7 @@ def make_swath(name: str, data: dict, default=config.Swath(), allow_none=False):
     swath.swath_width = get_element('swath_width', default.swath_width)
     swath.shift_next_swath = get_element('shift_next_swath', default.shift_next_swath)
     swath.offset = get_element('offset', default.offset)
+    swath.aligned = get_element('aligned', default.aligned)
 
     y_fn_expr = data.get('y_function')
     if y_fn_expr is not None:

@@ -120,6 +120,7 @@ my_swath1:
   shift_next_swath: false
   offset: [0., .3, 0.]
   y_function: '1.4 * sin(x * tau / 15.)'
+  aligned: false
 ```
 
 It corresponds to the element of the `swaths` block of the `field`.
@@ -146,6 +147,8 @@ The key corresponds to the name of the swath.
   position in the row.
   You can use the `x` variable, any functions of the python `math` module and some built-in
   functions like `abs`, `min` or `max`.
+* `aligned` (default: false): if true, the plant is oriented by 0° or 180° along the _z_ axis.
+  If false, the plant is oriented using a uniform distribution between 0° and 360°.
 
 #### The `noise` block
 

@@ -27,6 +27,7 @@ class Swath:
     shift_next_swath: bool = True
     offset: typing.List[float] = field(default_factory=lambda: [0., 0., 0.])
     y_function: typing.Callable[float, float] = lambda x: 0.
+    aligned: bool = False
 
 
 @dataclass
