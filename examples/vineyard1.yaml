@@ -1,0 +1,43 @@
+output_enabled: [blender, gazebo]
+output:
+  blender:
+    type: blender_file
+    filename: vineyard.blend
+  gazebo:
+    type: gazebo_model
+    name: vineyard
+
+field:
+  headland_width: 8.
+  swath_width: 2.0
+  plants_count: 10
+  swaths_count: 4
+  plant_distance: 1.25
+  row_distance: 0.
+
+  swaths:
+    swath1:
+      plant_type: vine1
+      plant_height: 1.4
+      rows_count: 1
+      orientation: aligned
+
+  noise:
+    position: .01
+    tilt: .03
+
+  weeds:
+    portulaca:
+      plant_type: portulaca
+      density: 6.
+    polygonum:
+      plant_type: polygonum
+      distance_min: 0.16
+    taraxacum:
+      plant_type: taraxacum
+      density: 10.
+      noise_offset: -0.1
+
+  stones:
+    density: 60.
+    noise_scale: 0.24

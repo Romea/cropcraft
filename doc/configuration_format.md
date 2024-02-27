@@ -147,8 +147,10 @@ The key corresponds to the name of the swath.
   position in the row.
   You can use the `x` variable, any functions of the python `math` module and some built-in
   functions like `abs`, `min` or `max`.
-* `aligned` (default: false): if true, the plant is oriented by 0° or 180° along the _z_ axis.
-  If false, the plant is oriented using a uniform distribution between 0° and 360°.
+* `orientation` (choice: [random, aligned, zero], default: random): if the orientation is `random`,
+  the plant is oriented using a uniform distribution between 0° and 360°.
+  If it is `aligned`, the angle will be 0° or 180°.
+  If it is `zero`, the angle will be only 0°.
 
 #### The `noise` block
 

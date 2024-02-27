@@ -12,15 +12,15 @@ field:
   swath_width: 2.0
   plants_count: 10
   swaths_count: 4
-  plant_distance: 1.25
+  plant_distance: 1.
   row_distance: 0.
+  orientation: zero
 
   swaths:
-    swath1:  
-      plant_type: vine1
-      plant_height: 1.4
+    swath1:
+      plant_type: vine2
+      plant_height: 1.
       rows_count: 1
-      aligned: true
 
   noise:
     position: .01

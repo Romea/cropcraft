@@ -33,6 +33,11 @@ class Swaths:
         self.length = 0.
         self.assets_path = os.path.abspath('assets')
         self.rand = random.Random(random.getrandbits(32))
+        self.orientation_fns = {
+            'random': lambda: self.rand.uniform(0, math.tau),
+            'aligned': lambda: self.rand.choice([0., math.pi]),
+            'zero': lambda: 0.,
+        }
 
     def load_plants(self):
         groups = set()
@@ -71,6 +76,7 @@ class Swaths:
 
     def create_swath(self, swath: config.Swath):
         noise = self.field.noise
+        orientation_fn = self.orientation_fns[swath.orientation]
         row_offset = (swath.swath_width - (swath.rows_count - 1) * swath.row_distance) / 2.
 
         id_tuples = itertools.product(
@@ -102,10 +108,7 @@ class Swaths:
             scale *= self.rand.lognormvariate(0, noise.scale)
             scales.append(scale)
 
-            if swath.aligned:
-                yaw = self.rand.choice([0., math.pi])
-            else:
-                yaw = self.rand.uniform(0, math.tau)
+            yaw = orientation_fn()
             pitch = self.rand.normalvariate(0, noise.tilt)
             roll = self.rand.normalvariate(0, noise.tilt)
             rotations.extend([roll, pitch, yaw])

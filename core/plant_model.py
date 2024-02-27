@@ -74,7 +74,7 @@ plant_groups = {
     ],
     'vine2': [
         PlantGroup('vine2', 'medium', .0, [
-            PlantModel('vine_01.obj', 1.4, 1.2),
+            PlantModel('vine_01.obj', 1.0, 0.8),
         ]),
     ],
 }
