@@ -78,12 +78,12 @@ class PlantManager:
                 self.update_groups(plant_dir.name, data)
 
     def load_description(self, dir: os.DirEntry):
-        yaml_description_file = dir.path + '/description.yaml'
+        yaml_description_file = os.path.join(dir.path, 'description.yaml')
         if os.access(yaml_description_file, os.R_OK):
             with open(yaml_description_file, 'r') as file:
                 return yaml.safe_load(file)
 
-        json_description_file = dir.path + '/description.json'
+        json_description_file = os.path.join(dir.path, 'description.json')
         if os.access(json_description_file, os.R_OK):
             with open(json_description_file, 'r') as file:
                 return json.load(file)
