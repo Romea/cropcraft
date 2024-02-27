@@ -13,25 +13,17 @@
 from dataclasses import dataclass, field
 import typing
 import os
-import yaml
-import json
+
+from . import input_utils
 
 
 @dataclass
 class PlantModel:
     filename: str
     height: float
+    filepath: str = None
     width: float = None
     leaf_area: float = None
-
-    @staticmethod
-    def from_dict(data: dict):
-        return PlantModel(
-            filename=data['filename'],
-            height=data['height'],
-            width=data.get('width'),
-            leaf_area=data.get('leaf_area'),
-        )
 
 
 @dataclass
@@ -69,26 +61,22 @@ class PlantManager:
 
     def __init__(self):
         self.plant_groups = {}
-        self.load_plants('assets/plants')
+        self.load_plants(os.path.abspath('assets/plants'))
+        self.load_plants(os.path.join(input_utils.user_data_dir(), 'plants'))
+        print(self.plant_groups['leek'])
 
     def load_plants(self, dirname: str):
+        if not os.access(dirname, os.R_OK):
+            return
+
         for plant_dir in os.scandir(dirname):
-            data = self.load_description(plant_dir)
+            data = input_utils.load_config_file('description', plant_dir.path)
             if data is not None:
-                self.update_groups(plant_dir.name, data)
+                self.update_groups(plant_dir, data)
 
-    def load_description(self, dir: os.DirEntry):
-        yaml_description_file = os.path.join(dir.path, 'description.yaml')
-        if os.access(yaml_description_file, os.R_OK):
-            with open(yaml_description_file, 'r') as file:
-                return yaml.safe_load(file)
+    def update_groups(self, plant_dir: os.DirEntry, description: dict):
+        plant_type = plant_dir.name
 
-        json_description_file = os.path.join(dir.path, 'description.json')
-        if os.access(json_description_file, os.R_OK):
-            with open(json_description_file, 'r') as file:
-                return json.load(file)
-
-    def update_groups(self, plant_type: str, description: dict):
         if plant_type not in self.plant_groups:
             self.plant_groups[plant_type] = {}
 
@@ -101,7 +89,14 @@ class PlantManager:
                 min_height=group_data['minimal_height'],
             )
             for model_data in group_data['models']:
-                group.append(PlantModel.from_dict(model_data))
+                model = PlantModel(
+                    filename=model_data['filename'],
+                    height=model_data.get('height'),
+                    width=model_data.get('width'),
+                    leaf_area=model_data.get('leaf_area'),
+                )
+                model.filepath = os.path.join(plant_dir.path, model.filename)
+                group.append(model)
 
             if group_name in groups:
                 groups[group_name].models += group.models

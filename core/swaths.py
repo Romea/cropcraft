@@ -66,7 +66,7 @@ class Swaths:
 
             for model in group.models:
                 view_layer.active_layer_collection = plant_layer_coll
-                obj_import(os.path.join(self.assets_path, 'plants', group.type, model.filename))
+                obj_import(model.filepath)
 
     def create_swaths(self):
         collection = bpy.data.collections['generated']
@@ -145,7 +145,9 @@ class Swaths:
         modifier['Socket_1'] = plant_collection
 
         # apply plant material to the swath object
-        object.active_material = plant_collection.objects[0].active_material.copy()
+        active_material = plant_collection.objects[0].active_material
+        if active_material:
+            object.active_material = active_material.copy()
 
         return object
 

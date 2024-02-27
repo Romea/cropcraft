@@ -10,19 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import importlib
-from importlib.util import find_spec
 import sys
-
-if not find_spec('yaml'):
-    import pip
-    pip.main(['install', 'pyyaml', '--user'])
-
-    # refresh sys.path
-    import site
-    from importlib import reload
-    reload(site)
-
 import yaml
 
 from . import config
@@ -184,7 +172,7 @@ def make_outputs(cfg: dict):
     output_data = cfg.get('output')
     if output_data is None:
         raise ParserError("Missing field 'output' as children of the root element")
-    
+
     output_enabled = cfg.get('output_enabled')
     if output_enabled is None:
         output_enabled = list(output_data.keys())

@@ -10,6 +10,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import appdirs
+import yaml
+import json
+import os
+
+
 def generate_safe_dict():
     import math
 
@@ -32,3 +38,19 @@ safe_eval_dict = generate_safe_dict()
 
 def safe_eval_fn(variable: str, expression: str):
     return eval(f"lambda {variable}: {expression}", safe_eval_dict)
+
+
+def user_data_dir():
+    return appdirs.user_data_dir(appname='cropcraft')
+
+
+def load_config_file(basename: str, path='.'):
+    yaml_filename = os.path.join(path, basename + '.yaml')
+    if os.access(yaml_filename, os.R_OK):
+        with open(yaml_filename, 'r') as file:
+            return yaml.safe_load(file)
+
+    json_filename = os.path.join(path, basename + '.json')
+    if os.access(json_filename, os.R_OK):
+        with open(json_filename, 'r') as file:
+            return json.load(file)

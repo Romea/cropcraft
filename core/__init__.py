@@ -10,6 +10,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+_reload_site = False
+
+from importlib.util import find_spec
+
+if not find_spec('appdirs'):
+    import pip
+    pip.main(['install', 'appdirs', '--user'])
+    _reload_site = True
+
+if not find_spec('yaml'):
+    import pip
+    pip.main(['install', 'pyyaml', '--user'])
+    _reload_site = True
+
+# refresh sys.path
+if _reload_site:
+    import site
+    from importlib import reload
+    reload(site)
+
 from . import base
 from . import swaths
 from . import ground
