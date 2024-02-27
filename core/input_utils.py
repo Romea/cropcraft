@@ -29,5 +29,6 @@ def generate_safe_dict():
 
 safe_eval_dict = generate_safe_dict()
 
+
 def safe_eval_fn(variable: str, expression: str):
     return eval(f"lambda {variable}: {expression}", safe_eval_dict)

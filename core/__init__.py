@@ -13,6 +13,6 @@
 from . import base
 from . import swaths
 from . import ground
-from . import plant_model
+from . import plant_manager
 from . import output
 from . import parser

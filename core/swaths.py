@@ -17,7 +17,7 @@ import mathutils
 import random
 import math
 
-from .plant_model import get_plant_group
+from .plant_manager import PlantManager
 from . import config
 from .model_import import obj_import
 
@@ -33,6 +33,7 @@ class Swaths:
         self.length = 0.
         self.assets_path = os.path.abspath('assets')
         self.rand = random.Random(random.getrandbits(32))
+        self.plant_mgr = PlantManager()
         self.orientation_fns = {
             'random': lambda: self.rand.uniform(0, math.tau),
             'aligned': lambda: self.rand.choice([0., math.pi]),
@@ -42,7 +43,7 @@ class Swaths:
     def load_plants(self):
         groups = set()
         for swath in self.field.swaths:
-            group = get_plant_group(swath.plant_type, swath.plant_height)
+            group = self.plant_mgr.get_group_by_height(swath.plant_type, swath.plant_height)
 
             if not group:
                 raise RuntimeError("Error: plant type '{}' and height '{}' is unknown.".format(
@@ -88,7 +89,7 @@ class Swaths:
         scales = []
         rotations = []
 
-        plant_group = get_plant_group(swath.plant_type, swath.plant_height)
+        plant_group = self.plant_mgr.get_group_by_height(swath.plant_type, swath.plant_height)
         group_height = plant_group.average_height()
 
         for swath_i, row_i, plant_i in id_tuples:
