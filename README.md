@@ -16,6 +16,7 @@ real-time simulation of robotics application.
 This program uses blender as a backend.
 It is a 3D modeling software that you can dowload from the
 [official website](https://www.blender.org/download/).
+The minimal required version is `4.0`.
 You also have to check that it is launchable from the command line.
 It means that blender must be accessible using the `PATH` environment variable.
 

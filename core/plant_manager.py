@@ -63,7 +63,6 @@ class PlantManager:
         self.plant_groups = {}
         self.load_plants(os.path.abspath('assets/plants'))
         self.load_plants(os.path.join(input_utils.user_data_dir(), 'plants'))
-        print(self.plant_groups['leek'])
 
     def load_plants(self, dirname: str):
         if not os.access(dirname, os.R_OK):
