@@ -15,7 +15,8 @@ real-time simulation of robotics applications.
 
 This program uses blender as a backend.
 It is a 3D modeling software that you can dowload from the
-[official website](https://www.blender.org/download/), or with the command
+[official website](https://www.blender.org/download/).
+If you use Ubuntu, you can install it using snap:
 ```
 snap install blender --classic
 ```
