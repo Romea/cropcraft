@@ -1,7 +1,7 @@
 # CropCraft
 
-CropCraft is a python script that allows to generate 3D models of crop fields specialized for
-real-time simulation of robotics application.
+CropCraft is a python script that generates 3D models of crop fields, specialized in
+real-time simulation of robotics applications.
 
 ![Example of field](doc/imgs/field_demo.png)
 
@@ -15,9 +15,12 @@ real-time simulation of robotics application.
 
 This program uses blender as a backend.
 It is a 3D modeling software that you can dowload from the
-[official website](https://www.blender.org/download/).
+[official website](https://www.blender.org/download/), or with the command
+```
+snap install blender --classic
+```
 The minimal required version is `4.0`.
-You also have to check that it is launchable from the command line.
+Ensure that blender is launchable from the command line.
 It means that blender must be accessible using the `PATH` environment variable.
 
 You also need to install some python requirements:
@@ -29,12 +32,12 @@ pip install -r requirements.txt
 
 To generate a crop field, you first need to create a configuration file (YAML formats).
 Some examples are available in the [`examples`](/examples) directory.
-Then you can execute the `cropcraft.py` script and specify the path of the choosen configuration
+Then you can execute the `cropcraft.py` script and specify the path of the chosen configuration
 file.
 ```
 python cropcraft.py examples/test1.yaml
 ```
-This command will generate a blender file named `test1.blend` a gazebo model named `test1`
+This command will generate a blender file named `test1.blend` and a gazebo model named `test1`
 
 Some options are available and described using
 ```
