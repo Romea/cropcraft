@@ -19,3 +19,4 @@ def create_all_node_group():
     crops_node_group()
     scattering_node_group()
     stones_scattering_node_group()
+    scattering_from_image_node_group()

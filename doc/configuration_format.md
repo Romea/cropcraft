@@ -199,7 +199,7 @@ scattering configuration block.
 * `noise_offset` (between -1.0 and 1.0, default: 0.1): a float that control the thickness of the
   empty area.
   If the value is smaller, the empty area will be bigger.
-* `scattering_img`: path to the density image
+* `scattering_img`: the density image path (relative to the configuration file)
 
 #### The `stones` block
 

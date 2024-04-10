@@ -12,6 +12,7 @@
 
 import sys
 import yaml
+import os
 
 from . import config
 from . import output as output_classes
@@ -69,7 +70,7 @@ def make_noise(data: dict):
     return noise
 
 
-def make_weed(name: str, data: dict):
+def make_weed(name: str, data: dict, cfg_dir: str):
     weed = config.Weed()
     weed.name = name
     weed.plant_type = data.get('plant_type')
@@ -79,18 +80,21 @@ def make_weed(name: str, data: dict):
     weed.density = data.get('density', weed.density)
     weed.distance_min = data.get('distance_min', weed.distance_min)
 
-
     weed.scattering_mode = data.get('scattering_mode', weed.scattering_mode)
     if weed.scattering_mode not in ('noise', 'image'): 
         raise ParserError(f"Invalid '{name}.scattering_mode': options are 'noise' or 'image'")
+
     weed.noise_scale = data.get('noise_scale', weed.noise_scale)
     weed.noise_offset = data.get('noise_offset', weed.noise_offset)
     if weed.noise_offset < -1. or weed.noise_offset > 1.:
         raise ParserError(f"The '{name}.noise_offset' value must be between -1. and 1.")
 
-    weed.scattering_img = data.get('scattering_img', weed.scattering_img)
-    if weed.scattering_mode=='image' and weed.scattering_img is None:
-        raise ParserError(f"'{name}.scattering_img' is necessary in 'image' scatttering mode")
+    if weed.scattering_mode == 'image':
+        weed.scattering_img = data.get('scattering_img', weed.scattering_img)
+        if weed.scattering_img is not None:
+            weed.scattering_img = os.path.join(cfg_dir, weed.scattering_img)
+        else:
+            raise ParserError(f"'{name}.scattering_img' is necessary in 'image' scatttering mode")
 
     return weed
 
@@ -106,11 +110,11 @@ def make_stones(field: dict):
     stones.noise_scale = data.get('noise_scale', stones.noise_scale)
     stones.noise_offset = data.get('noise_offset', stones.noise_offset)
     if stones.noise_offset < -1. or stones.noise_offset > 1.:
-        raise ParserError(f"The 'stones.noise_offset' value must be between -1. and 1.")
+        raise ParserError("The 'stones.noise_offset' value must be between -1. and 1.")
     return stones
 
 
-def make_field(cfg: dict):
+def make_field(cfg: dict, cfg_dir: str):
     field_data = cfg.get('field')
     if field_data is None:
         raise ParserError("Missing element 'field' as root element")
@@ -127,7 +131,7 @@ def make_field(cfg: dict):
 
     weeds_data = field_data.get('weeds')
     if weeds_data is not None:
-        field.weeds = [make_weed(name, data) for name, data in weeds_data.items()]
+        field.weeds = [make_weed(name, data, cfg_dir) for name, data in weeds_data.items()]
 
     field.stones = make_stones(field_data)
 
@@ -203,7 +207,7 @@ def load_yaml_config(filename: str):
         cfg_data = yaml.safe_load(file.read())
     
     cfg = config.Config()
-    cfg.field = make_field(cfg_data)
+    cfg.field = make_field(cfg_data, os.path.dirname(filename))
     cfg.outputs = make_outputs(cfg_data)
 
     return cfg
