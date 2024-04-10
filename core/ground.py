@@ -13,8 +13,9 @@
 import os
 import bpy
 import random
+import itertools
 
-from . import config
+from . import config, input_utils
 from .swaths import Swaths
 from .model_import import obj_import
 
@@ -51,19 +52,19 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
 
-        weeds_path = os.path.join(self.assets_path, 'weeds')
+        assets_paths = os.scandir(os.path.join(self.assets_path, 'weeds'))
+        local_paths = os.scandir(os.path.join(input_utils.user_data_dir(), 'weeds'))
 
-        for group_name in os.listdir(weeds_path):
-            collection = bpy.data.collections.new(group_name)
+        for weed_dir in itertools.chain(local_paths, assets_paths):
+            collection = bpy.data.collections.new(weed_dir.name)
             weeds_collection.children.link(collection)
-            group_layer_coll = weeds_layer_coll.children[group_name]
+            group_layer_coll = weeds_layer_coll.children[weed_dir.name]
 
-            group_path = os.path.join(weeds_path, group_name)
-            models = filter(lambda x: x.endswith('.obj'), os.listdir(group_path))
+            models = filter(lambda x: x.endswith('.obj'), os.listdir(weed_dir.path))
 
             for model in models:
                 view_layer.active_layer_collection = group_layer_coll
-                obj_import(os.path.join(group_path, model))
+                obj_import(os.path.join(weed_dir.path, model))
 
     def load_stones(self):
         view_layer = bpy.context.view_layer
