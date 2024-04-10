@@ -44,8 +44,10 @@ class Weed:
     plant_type: str = None
     density: float = 5.
     distance_min: float = 0.12
+    scattering_mode: str='noise'
     noise_scale: float = 0.36
     noise_offset: float = 0.1
+    scattering_img: str = None
 
 
 @dataclass

@@ -78,10 +78,20 @@ def make_weed(name: str, data: dict):
 
     weed.density = data.get('density', weed.density)
     weed.distance_min = data.get('distance_min', weed.distance_min)
+
+
+    weed.scattering_mode = data.get('scattering_mode', weed.scattering_mode)
+    if weed.scattering_mode not in ('noise', 'image'): 
+        raise ParserError(f"Invalid '{name}.scattering_node': options are 'noise' or 'image'")
     weed.noise_scale = data.get('noise_scale', weed.noise_scale)
     weed.noise_offset = data.get('noise_offset', weed.noise_offset)
     if weed.noise_offset < -1. or weed.noise_offset > 1.:
         raise ParserError(f"The '{name}.noise_offset' value must be between -1. and 1.")
+
+    weed.scattering_img = data.get('scattering_img', weed.scattering_img)
+    if weed.scattering_mode=='image' and weed.scattering_img is None:
+        raise ParserError(f"'{name}.scattering_img' is necessary in 'image' scatttering mode")
+
     return weed
 
 

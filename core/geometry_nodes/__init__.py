@@ -11,6 +11,7 @@
 # limitations under the License.
 
 from .crops import crops_node_group
+from .scattering_from_image import scattering_from_image_node_group
 from .scattering import scattering_node_group
 from .stones_scattering import stones_scattering_node_group
 

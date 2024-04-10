@@ -190,12 +190,16 @@ scattering configuration block.
 * `plant_type`: a string that corresponds to the name of the weed model
 * `density`: a float that control the quantity of weeds that is generated
 * `distance_min` (in meters, default: 0.12): minimal distance between generated weeds
+* `scattering_mode` (default:'noise'): a string setting the mode of the scattering.
+'noise' uses a random pattern controlled by the parameters `noise_scale` and `noise_offset`.
+'image' uses a grayscale image to control the density
 * `noise_scale` (default: 0.36): a float that control the size of the roughness of the random
   density map.
   If the value is smaller, the blob will be bigger.
 * `noise_offset` (between -1.0 and 1.0, default: 0.1): a float that control the thickness of the
   empty area.
   If the value is smaller, the empty area will be bigger.
+* `scattering_img`: path to the density image
 
 #### The `stones` block
 

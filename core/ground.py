@@ -120,13 +120,20 @@ class Ground:
         object.modifiers.new('grid', 'REMESH')
 
         node = object.modifiers.new(weed.name, 'NODES')
-        node.node_group = bpy.data.node_groups['scattering']
+        if weed.scattering_mode == 'noise':
+            node.node_group = bpy.data.node_groups['scattering']
+        else: #weed.scattering_mode == 'image':
+            node.node_group = bpy.data.node_groups['scattering_from_image']
+
         node['Socket_3'] = weed_collection
         node['Socket_4'] = self.rand.randint(-10000, 10000)
         node['Socket_5'] = weed.distance_min
         node['Socket_6'] = weed.density
-        node['Socket_7'] = weed.noise_scale
-        node['Socket_8'] = weed.noise_offset
+        if weed.scattering_mode == 'noise':
+            node['Socket_7'] = weed.noise_scale
+            node['Socket_8'] = weed.noise_offset
+        else: #weed.scattering_mode == 'image':
+            node['Socket_9'] = bpy.data.images.load(weed.scattering_img, check_existing=True)
 
         # apply instance material to the object
         for material in weed_collection.objects[0].data.materials:
