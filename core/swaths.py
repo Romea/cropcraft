@@ -88,9 +88,11 @@ class Swaths:
         vertices = []
         scales = []
         rotations = []
+        indexes = []
 
         plant_group = self.plant_mgr.get_group_by_height(swath.plant_type, swath.plant_height)
         group_height = plant_group.average_height()
+        nb_plants = len(plant_group.models)
 
         for swath_i, row_i, plant_i in id_tuples:
             if self.rand.random() < noise.missing:
@@ -114,7 +116,9 @@ class Swaths:
             roll = self.rand.normalvariate(0, noise.tilt)
             rotations.extend([roll, pitch, yaw])
 
-        object = self.create_swath_object(vertices, swath.name, scales, rotations)
+            indexes.append(self.rand.randint(0, nb_plants - 1))
+
+        object = self.create_swath_object(vertices, swath.name, scales, rotations, indexes)
 
         cur_width = swath.swaths_count * swath.swath_width
         self.width = max(self.width, self.cur_swath_offset + cur_width)
@@ -124,7 +128,7 @@ class Swaths:
 
         return object
 
-    def create_swath_object(self, vertices: list, name: str, scales, rotations):
+    def create_swath_object(self, vertices: list, name: str, scales, rotations, indexes):
         mesh = bpy.data.meshes.new(name)
         mesh.from_pydata(vertices, edges=[], faces=[])
         mesh.update()
@@ -133,6 +137,8 @@ class Swaths:
         scale_attr.data.foreach_set('value', scales)
         rotation_attr = mesh.attributes.new('rotation', type='FLOAT_VECTOR', domain='POINT')
         rotation_attr.data.foreach_set('vector', rotations)
+        index_attr = mesh.attributes.new('index', type='INT', domain='POINT')
+        index_attr.data.foreach_set('value', indexes)
 
         object = bpy.data.objects.new(name, mesh)
 
@@ -142,7 +148,7 @@ class Swaths:
 
         collection_name = self.swath_plant_groups[name].full_name()
         plant_collection = bpy.data.collections[collection_name]
-        modifier['Socket_1'] = plant_collection
+        modifier['Socket_2'] = plant_collection
 
         # apply plant material to the swath object
         active_material = plant_collection.objects[0].active_material
