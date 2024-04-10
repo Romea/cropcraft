@@ -44,3 +44,8 @@ Some options are available and described using
 ```
 python cropcraft.py --help
 ```
+
+## Documentation
+
+* [Description of the configuration file format](doc/configuration_format.md)
+* [How to add your own assets](doc/add_assets.md)
