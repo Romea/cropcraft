@@ -52,10 +52,15 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
 
+        selected_weed_names = list(map(lambda w: w.name, self.field.weeds))
+
         assets_paths = os.scandir(os.path.join(self.assets_path, 'weeds'))
         local_paths = os.scandir(os.path.join(input_utils.user_data_dir(), 'weeds'))
 
         for weed_dir in itertools.chain(local_paths, assets_paths):
+            if weed_dir.name not in selected_weed_names:
+                continue
+
             collection = bpy.data.collections.new(weed_dir.name)
             weeds_collection.children.link(collection)
             group_layer_coll = weeds_layer_coll.children[weed_dir.name]
