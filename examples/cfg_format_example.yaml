@@ -17,7 +17,7 @@ field:
 
   swaths:
     swath1:  
-      plant_type: bean
+      plant_type: leek
       plant_height: .12
       row_distance: .4
       rows_count: 3
@@ -37,11 +37,11 @@ field:
     portulaca:
       plant_type: portulaca
       density: 3.
-    polygonum:
-      plant_type: polygonum
-      distance_min: 0.16
-    taraxacum:
-      plant_type: taraxacum
+    # polygonum:
+    #   plant_type: polygonum
+    #   distance_min: 0.16
+    leek:
+      plant_type: leek
       density: 10.
       noise_offset: -0.1
 
