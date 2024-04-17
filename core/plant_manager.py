@@ -62,7 +62,10 @@ class PlantManager:
     def __init__(self):
         self.plant_groups = {}
         self.load_plants(os.path.abspath('assets/plants'))
-        self.load_plants(os.path.join(input_utils.user_data_dir(), 'plants'))
+
+        user_plants_dir = os.path.join(input_utils.user_data_dir(), 'plants')
+        if os.path.isdir(user_plants_dir):
+            self.load_plants(user_plants_dir)
 
     def load_plants(self, dirname: str):
         if not os.access(dirname, os.R_OK):

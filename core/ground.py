@@ -55,7 +55,12 @@ class Ground:
         selected_weed_types = [w.plant_type for w in self.field.weeds]
 
         assets_paths = os.scandir(os.path.join(self.assets_path, 'weeds'))
-        local_paths = os.scandir(os.path.join(input_utils.user_data_dir(), 'weeds'))
+
+        user_weeds_dir = os.path.join(input_utils.user_data_dir(), 'weeds')
+        if os.path.isdir(user_weeds_dir):
+            local_paths = os.scandir()
+        else:
+            local_paths = []
 
         for weed_dir in itertools.chain(local_paths, assets_paths):
             if weed_dir.name not in selected_weed_types:
