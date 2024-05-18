@@ -16,6 +16,7 @@ import os
 
 from . import gazebo
 from . import config
+from .field_description import FieldDescription
 
 
 @dataclass
@@ -43,3 +44,13 @@ class GazeboModel:
         model.export_field(field)
         model.generate_sdf()
         model.generate_config()
+
+@dataclass
+class Description:
+    filename: str = None
+
+    def export(self, output_dir: str, field: config.Field):
+        filepath = os.path.join(output_dir, self.filename)
+
+        description = FieldDescription(field)
+        description.dump(filepath)
