@@ -65,6 +65,38 @@ class Stones:
 
 
 @dataclass
+class PlantState:
+    x: float = 0
+    y: float = 0
+    z: float = 0
+    roll: float = 0
+    pitch: float = 0
+    yaw: float = 0
+    height: float = 0
+    width: float = 0
+    leaf_area: float = 0
+    type: str = None
+    filename: str = None
+
+@dataclass
+class RowState:
+    crops: typing.List[PlantState] = field(default_factory=lambda: [])
+    leaf_area: float = 0
+
+
+@dataclass
+class SwathState:
+    rows: typing.List[RowState] = field(default_factory=lambda: [])
+    leaf_area: float = 0
+
+
+@dataclass
+class FieldState:
+    swaths: typing.List[SwathState] = field(default_factory=lambda: [])
+    leaf_area: float = 0
+
+
+@dataclass
 class Field:
     headland_width: float = 4.0
     scattering_extra_width: float = 1.0
@@ -76,9 +108,12 @@ class Field:
     weeds: typing.List[Weed] = field(default_factory=lambda: [])
     stones: Stones = None
 
+    state: FieldState = None
+
     def as_dict(self):
         data = asdict(self)
         data.pop('default')
+        data.pop('state')
         data['swaths'] = [swath.as_dict() for swath in self.swaths]
         return data
 

@@ -23,21 +23,20 @@ from .model_import import obj_import
 
 
 class Swaths:
-
     def __init__(self, field: config.Field):
         self.field = field
         self.swath_plant_groups = {}
-        self.cur_swath_offset = 0.
+        self.cur_swath_offset = 0.0
         self.center_pos = mathutils.Vector()
-        self.width = 0.
-        self.length = 0.
+        self.width = 0.0
+        self.length = 0.0
         self.assets_path = os.path.abspath('assets')
         self.rand = random.Random(random.getrandbits(32))
         self.plant_mgr = PlantManager()
         self.orientation_fns = {
             'random': lambda: self.rand.uniform(0, math.tau),
-            'aligned': lambda: self.rand.choice([0., math.pi]),
-            'zero': lambda: 0.,
+            'aligned': lambda: self.rand.choice([0.0, math.pi]),
+            'zero': lambda: 0.0,
         }
 
     def load_plants(self):
@@ -46,8 +45,11 @@ class Swaths:
             group = self.plant_mgr.get_group_by_height(swath.plant_type, swath.plant_height)
 
             if not group:
-                raise RuntimeError("Error: plant type '{}' and height '{}' is unknown.".format(
-                    swath.plant_type, swath.plant_height))
+                raise RuntimeError(
+                    "Error: plant type '{}' and height '{}' is unknown.".format(
+                        swath.plant_type, swath.plant_height
+                    )
+                )
 
             groups.add(group)
             self.swath_plant_groups[swath.name] = group
@@ -69,16 +71,21 @@ class Swaths:
                 obj_import(model.filepath)
 
     def create_swaths(self):
+        self.field.state = config.FieldState(swaths=[])
+
         collection = bpy.data.collections['generated']
 
         for swath in self.field.swaths:
-            swath_object = self.create_swath(swath)
+            swath_object = self._create_swath(swath)
             collection.objects.link(swath_object)
 
-    def create_swath(self, swath: config.Swath):
+    def get_center_pos(self):
+        return mathutils.Vector((self.length / 2.0, self.width / 2.0, 0.0))
+
+    def _create_swath(self, swath: config.Swath):
         noise = self.field.noise
         orientation_fn = self.orientation_fns[swath.orientation]
-        row_offset = (swath.swath_width - (swath.rows_count - 1) * swath.row_distance) / 2.
+        row_offset = (swath.swath_width - (swath.rows_count - 1) * swath.row_distance) / 2.0
 
         id_tuples = itertools.product(
             range(swath.swaths_count),
@@ -94,31 +101,63 @@ class Swaths:
         group_height = plant_group.average_height()
         nb_plants = len(plant_group.models)
 
-        for swath_i, row_i, plant_i in id_tuples:
-            if self.rand.random() < noise.missing:
-                continue
+        for swath_i in range(swath.swaths_count):
+            swath_state = config.SwathState()
 
-            x = swath.offset[0] + plant_i * swath.plant_distance
-            y = swath.offset[1] + self.cur_swath_offset + swath_i * swath.swath_width + row_offset
-            y += swath.y_function(x) + row_i * swath.row_distance
-            z = swath.offset[2]
+            for row_i in range(swath.rows_count):
+                row_state = config.RowState()
 
-            x += self.rand.normalvariate(0, noise.position)
-            y += self.rand.normalvariate(0, noise.position)
-            vertices.append((x, y, z))
+                for plant_i in range(swath.plants_count):
+                    if self.rand.random() < noise.missing:
+                        continue
 
-            scale = swath.plant_height / group_height
-            scale *= self.rand.lognormvariate(0, noise.scale)
-            scales.append(scale)
+                    x = swath.offset[0] + plant_i * swath.plant_distance
+                    y = swath.offset[1] + self.cur_swath_offset
+                    y += swath_i * swath.swath_width + row_offset
+                    y += swath.y_function(x) + row_i * swath.row_distance
+                    z = swath.offset[2]
 
-            yaw = orientation_fn()
-            pitch = self.rand.normalvariate(0, noise.tilt)
-            roll = self.rand.normalvariate(0, noise.tilt)
-            rotations.extend([roll, pitch, yaw])
+                    x += self.rand.normalvariate(0, noise.position)
+                    y += self.rand.normalvariate(0, noise.position)
+                    vertices.append((x, y, z))
 
-            indexes.append(self.rand.randint(0, nb_plants - 1))
+                    scale = swath.plant_height / group_height
+                    scale *= self.rand.lognormvariate(0, noise.scale)
+                    scales.append(scale)
 
-        object = self.create_swath_object(vertices, swath.name, scales, rotations, indexes)
+                    yaw = orientation_fn()
+                    pitch = self.rand.normalvariate(0, noise.tilt)
+                    roll = self.rand.normalvariate(0, noise.tilt)
+                    rotations.extend([roll, pitch, yaw])
+
+                    index = self.rand.randint(0, nb_plants - 1)
+                    indexes.append(index)
+
+                    plant_model = plant_group.models[index]
+
+                    plant_state = config.PlantState(
+                        x=x,
+                        y=y,
+                        z=z,
+                        roll=roll,
+                        pitch=pitch,
+                        yaw=yaw,
+                        height=plant_model.height * scale,
+                        width=plant_model.width * scale,
+                        leaf_area=plant_model.leaf_area * scale**2,
+                        type=swath.plant_type,
+                        filename=plant_model.filename,
+                    )
+                    row_state.crops.append(plant_state)
+                    row_state.leaf_area += plant_state.leaf_area
+
+                swath_state.rows.append(row_state)
+                swath_state.leaf_area += row_state.leaf_area
+
+            self.field.state.swaths.append(swath_state)
+            self.field.state.leaf_area += swath_state.leaf_area
+
+        object = self._create_swath_object(vertices, swath.name, scales, rotations, indexes)
 
         cur_width = swath.swaths_count * swath.swath_width
         self.width = max(self.width, self.cur_swath_offset + cur_width)
@@ -128,7 +167,7 @@ class Swaths:
 
         return object
 
-    def create_swath_object(self, vertices: list, name: str, scales, rotations, indexes):
+    def _create_swath_object(self, vertices: list, name: str, scales, rotations, indexes):
         mesh = bpy.data.meshes.new(name)
         mesh.from_pydata(vertices, edges=[], faces=[])
         mesh.update()
@@ -156,6 +195,3 @@ class Swaths:
             object.active_material = active_material.copy()
 
         return object
-
-    def get_center_pos(self):
-        return mathutils.Vector((self.length / 2., self.width / 2., 0.))

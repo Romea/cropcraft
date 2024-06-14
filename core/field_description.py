@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import dataclasses
+from dataclasses import is_dataclass, asdict
 import json
 
 from . import config
@@ -22,8 +22,8 @@ class DataEncoder(json.JSONEncoder):
             return o.as_dict()
         if isinstance(o, config.Swath):
             return o.as_dict()
-        if dataclasses.is_dataclass(o):
-            return dataclasses.asdict(o)
+        if is_dataclass(o):
+            return asdict(o)
         return super().default(o)
 
 
@@ -34,6 +34,7 @@ class FieldDescription:
     def dump(self, filename: str):
         data = {
             "config": self.field,
+            'field': self.field.state,
         }
         with open(filename, "w") as file:
             json.dump(data, file, cls=DataEncoder)
