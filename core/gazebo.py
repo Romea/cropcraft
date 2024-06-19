@@ -164,9 +164,9 @@ material {name}
         self.export_object('ground', ground)
         self.create_sdf_link(ground, collision_enabled=True, retro_laser=0.)
 
-        for index, swath in enumerate(field.swaths):
-            object = bpy.data.objects[swath.name]
-            self.export_object(swath.name, object)
+        for index, bed in enumerate(field.beds):
+            object = bpy.data.objects[bed.name]
+            self.export_object(bed.name, object)
             self.create_sdf_link(object, collision_enabled=False, retro_laser=float(index + 1))
             
         for index, weed in enumerate(field.weeds):

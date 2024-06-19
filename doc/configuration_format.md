@@ -12,19 +12,19 @@ output:
 
 field:
   headland_width: 8.
-  swath_width: 1.57
+  bed_width: 1.57
   y_function: '.2 * sin(x * tau / 15.)'
   plants_count: 100
-  swaths_count: 2
+  beds_count: 2
   plant_distance: .15
 
-  swaths:
-    swath1:  
+  beds:
+    bed1:  
       plant_type: bean
       plant_height: .12
       row_distance: .4
       rows_count: 3
-    swath2:  
+    bed2:  
       plant_type: maize
       plant_height: .40
       row_distance: .785
@@ -74,10 +74,10 @@ field:
   headland_width: 7.0
   scattering_extra_width: 1.5
   random_seed: 344567809264
-  swaths:
-    my_swath1:
+  beds:
+    my_bed1:
       ...
-    my_swath2:
+    my_bed2:
       ...
   noise: {}
   weeds:
@@ -96,51 +96,51 @@ field:
   executed several times with no change in its configuration.
   The program outputs its seed in order to use it in a configuration file and generate a similar
   environment.
-* `swaths`: a block that contains the configuration of each swath to generate.
-  The key correspond to the name of the swath and the value is a swath block (described below).
+* `beds`: a block that contains the configuration of each bed to generate.
+  The key correspond to the name of the bed and the value is a bed block (described below).
 * `noise` (optional): a block that contains the noise configuration.
 * `weeds` (optional): a block that contains the configuration of each weed scattering.
 * `stones` (optional): a block that contains the stones scattering configuration.
 
-It is also possible to specify the parameters of the swath block directly in the `field` block.
-In this case, these parameters are used as default values for the swaths.
+It is also possible to specify the parameters of the bed block directly in the `field` block.
+In this case, these parameters are used as default values for the beds.
 
-#### The swath block
+#### The bed block
 
 ```yaml
-my_swath1:
+my_bed1:
   plant_type: bean
   plant_height: .12
   row_distance: .52
   rows_count: 3
-  swath_width: 1.57
+  bed_width: 1.57
   plants_count: 100
-  swaths_count: 10
+  beds_count: 10
   plant_distance: .15
-  shift_next_swath: false
+  shift_next_bed: false
   offset: [0., .3, 0.]
   y_function: '1.4 * sin(x * tau / 15.)'
   aligned: false
 ```
 
-It corresponds to the element of the `swaths` block of the `field`.
-The key corresponds to the name of the swath.
+It corresponds to the element of the `beds` block of the `field`.
+The key corresponds to the name of the bed.
 
 * `plant_type`: allows to select the model group.
   The current types available are `maize` and `bean`.
 * `plant_height` (in meters): the desired height for the plants.
   The models are grouped by height and are rescaled to correspond to the desired height.
 * `plant_distance` (in meters): the distance between each crop in a row.
-* `swath_width` (in meters): the with of the swath.
-  The next swath will be generated with an offset corresponding to the `swath_width` multiplied by
-  `swath_count` but only if `shift_next_swath` is disabled.
-* `row_distance` (in meters): distance between two consecutive rows in the swath.
+* `bed_width` (in meters): the with of the bed.
+  The next bed will be generated with an offset corresponding to the `bed_width` multiplied by
+  `bed_count` but only if `shift_next_bed` is disabled.
+* `row_distance` (in meters): distance between two consecutive rows in the bed.
 * `plants_count`: number of plants in a row.
-* `rows_count` (default: 1): number of rows in a swath.
-* `swaths_count` (default: 1): number of swath (the same configuration is repeated).
-* `shift_next_swath` (default: true): a boolean to enable/disable the shift of the next swath.
-  If disabled, the next swath configuration will cover the previous one.
-* `offset` (default: [0, 0, 0], in meters): a (x,y,z) offset applied to all crops of the swath
+* `rows_count` (default: 1): number of rows in a bed.
+* `beds_count` (default: 1): number of bed (the same configuration is repeated).
+* `shift_next_bed` (default: true): a boolean to enable/disable the shift of the next bed.
+  If disabled, the next bed configuration will cover the previous one.
+* `offset` (default: [0, 0, 0], in meters): a (x,y,z) offset applied to all crops of the bed
 * `y_function` (default: '0.0'): a string representing a python expression used to apply a lateral
   offset depending of the `x` coordinate.
   It is equivalent to write a function _y = f(x)_ where _y_ is the lateral offset and _x_ the

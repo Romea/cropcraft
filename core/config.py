@@ -15,17 +15,17 @@ import typing
 
 
 @dataclass
-class Swath:
+class Bed:
     name: str = None
     plant_type: str = None
     plant_height: float = None
     plant_distance: float = None
-    swath_width: float = None
+    bed_width: float = None
     row_distance: float = None
     plants_count: int = None
     rows_count: int = 1
-    swaths_count: int = 1
-    shift_next_swath: bool = True
+    beds_count: int = 1
+    shift_next_bed: bool = True
     offset: typing.List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     y_function: typing.Callable[float, float] = lambda x: 0.0
     orientation: str = "random"
@@ -85,14 +85,14 @@ class RowState:
 
 
 @dataclass
-class SwathState:
+class BedState:
     rows: typing.List[RowState] = field(default_factory=lambda: [])
     leaf_area: float = 0
 
 
 @dataclass
 class FieldState:
-    swaths: typing.List[SwathState] = field(default_factory=lambda: [])
+    beds: typing.List[BedState] = field(default_factory=lambda: [])
     leaf_area: float = 0
 
 
@@ -102,9 +102,9 @@ class Field:
     scattering_extra_width: float = 1.0
     seed: int = None
 
-    default: Swath = None
+    default: Bed = None
     noise: Noise = None
-    swaths: typing.List[Swath] = None
+    beds: typing.List[Bed] = None
     weeds: typing.List[Weed] = field(default_factory=lambda: [])
     stones: Stones = None
 
@@ -114,7 +114,7 @@ class Field:
         data = asdict(self)
         data.pop('default')
         data.pop('state')
-        data['swaths'] = [swath.as_dict() for swath in self.swaths]
+        data['beds'] = [bed.as_dict() for bed in self.beds]
         return data
 
 

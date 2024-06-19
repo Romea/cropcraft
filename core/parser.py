@@ -23,9 +23,9 @@ class ParserError(Exception):
     pass
 
 
-def make_swath(name: str, data: dict, default=config.Swath(), allow_none=False):
-    swath = config.Swath()
-    swath.name = name
+def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
+    bed = config.Bed()
+    bed.name = name
 
     def get_element(field, default):
         value = data.get(field, default)
@@ -33,28 +33,28 @@ def make_swath(name: str, data: dict, default=config.Swath(), allow_none=False):
             raise ParserError(f"Missing element '{field}' and no default value")
         return value
 
-    swath.plant_type = get_element('plant_type', default.plant_type)
-    swath.plant_height = get_element('plant_height', default.plant_height)
-    swath.plant_distance = get_element('plant_distance', default.plant_distance)
-    swath.row_distance = get_element('row_distance', default.row_distance)
-    swath.plants_count = get_element('plants_count', default.plants_count)
-    swath.rows_count = get_element('rows_count', default.rows_count)
-    swath.swaths_count = get_element('swaths_count', default.swaths_count)
-    swath.swath_width = get_element('swath_width', default.swath_width)
-    swath.shift_next_swath = get_element('shift_next_swath', default.shift_next_swath)
-    swath.offset = get_element('offset', default.offset)
-    swath.orientation = get_element('orientation', default.orientation)
+    bed.plant_type = get_element('plant_type', default.plant_type)
+    bed.plant_height = get_element('plant_height', default.plant_height)
+    bed.plant_distance = get_element('plant_distance', default.plant_distance)
+    bed.row_distance = get_element('row_distance', default.row_distance)
+    bed.plants_count = get_element('plants_count', default.plants_count)
+    bed.rows_count = get_element('rows_count', default.rows_count)
+    bed.beds_count = get_element('beds_count', default.beds_count)
+    bed.bed_width = get_element('bed_width', default.bed_width)
+    bed.shift_next_bed = get_element('shift_next_bed', default.shift_next_bed)
+    bed.offset = get_element('offset', default.offset)
+    bed.orientation = get_element('orientation', default.orientation)
 
-    if swath.orientation not in ['random', 'aligned', 'zero']:
-        raise ParserError(f"The value '{swath.orientation}' is invalid for {name}.orientation")
+    if bed.orientation not in ['random', 'aligned', 'zero']:
+        raise ParserError(f"The value '{bed.orientation}' is invalid for {name}.orientation")
 
     y_fn_expr = data.get('y_function')
     if y_fn_expr is not None:
-        swath.y_function = input_utils.safe_eval_fn('x', y_fn_expr)
+        bed.y_function = input_utils.safe_eval_fn('x', y_fn_expr)
     else:
-        swath.y_function = default.y_function
+        bed.y_function = default.y_function
 
-    return swath
+    return bed
 
 
 def make_noise(data: dict):
@@ -120,14 +120,14 @@ def make_field(cfg: dict, cfg_dir: str):
         raise ParserError("Missing element 'field' as root element")
 
     field = config.Field()
-    field.default = make_swath('default', field_data, allow_none=True)
+    field.default = make_bed('default', field_data, allow_none=True)
     field.noise = make_noise(field_data)
 
-    swaths_data = field_data.get('swaths')
-    if swaths_data is None:
-        raise ParserError("Missing element 'swaths' as children of 'field'")
+    beds_data = field_data.get('beds')
+    if beds_data is None:
+        raise ParserError("Missing element 'beds' as children of 'field'")
 
-    field.swaths = [make_swath(name, data, field.default) for name, data in swaths_data.items()]
+    field.beds = [make_bed(name, data, field.default) for name, data in beds_data.items()]
 
     weeds_data = field_data.get('weeds')
     if weeds_data is not None:

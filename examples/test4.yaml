@@ -5,18 +5,18 @@ output:
 
 field:
   headland_width: 1.
-  swath_width: 0.3
+  bed_width: 0.3
   plant_distance: .2
   plants_count: 10
   plant_type: maize
   row_distance: 0.
 
-  swaths:
-    swath1: { plant_height: .05 }
-    swath2: { plant_height: .10 }
-    swath3: { plant_height: .15 }
-    swath4: { plant_height: .20 }
-    swath5: { plant_height: .25 }
-    swath6: { plant_height: .30 }
-    swath7: { plant_height: .35 }
-    swath8: { plant_height: .40 }
+  beds:
+    bed1: { plant_height: .05 }
+    bed2: { plant_height: .10 }
+    bed3: { plant_height: .15 }
+    bed4: { plant_height: .20 }
+    bed5: { plant_height: .25 }
+    bed6: { plant_height: .30 }
+    bed7: { plant_height: .35 }
+    bed8: { plant_height: .40 }

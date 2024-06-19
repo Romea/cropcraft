@@ -12,35 +12,35 @@ field:
   headland_width: 4.
   random_seed: 9473621
 
-  swath_width: 1.57
+  bed_width: 1.57
   plant_distance: .15
   y_function: '.2 * sin(x * tau / 15.)'
-  shift_next_swath: false
+  shift_next_bed: false
 
-  swaths:
-    swath1:  
+  beds:
+    bed1:  
       plant_type: maize
       plant_height: .22
       row_distance: .785
       plants_count: 100
       rows_count: 2
-      swaths_count: 3
+      beds_count: 3
 
-    swath2:  
+    bed2:  
       plant_type: bean
       plant_height: .15
       row_distance: .285
       plants_count: 100
       rows_count: 2
-      swaths_count: 3
+      beds_count: 3
 
-    swath3:  
+    bed3:  
       plant_type: bean
       plant_height: .14
       row_distance: .285
       plants_count: 100
       rows_count: 2
-      swaths_count: 2
+      beds_count: 2
       offset: [0., .785, 0.]
 
   noise:

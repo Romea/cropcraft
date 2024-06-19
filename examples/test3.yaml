@@ -13,25 +13,25 @@ output:
 field:
   headland_width: 8.
 
-  swath_width: 1.57
+  bed_width: 1.57
   plant_distance: .14
   plants_count: 150
   y_function: '(lambda t: 7. * sin(t * tau) * t**2 * (t - 1)**2)(x / 21.)'
 
-  swaths:
-    swath1:  
+  beds:
+    bed1:  
       plant_type: maize
       plant_height: .22
       row_distance: .785
       rows_count: 2
-      swaths_count: 2
+      beds_count: 2
 
-    swath2:  
+    bed2:  
       plant_type: bean
       plant_height: .15
       row_distance: .5233
       rows_count: 3
-      swaths_count: 2
+      beds_count: 2
 
   noise:
     position: .008

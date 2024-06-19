@@ -26,14 +26,14 @@ output:
 
 field:
   headland_width: 8.
-  swath_width: 2.0
+  bed_width: 2.0
   plants_count: 10
-  swaths_count: 4
+  beds_count: 4
   plant_distance: 1.25
   row_distance: 0.
 
-  swaths:
-    swath1:
+  beds:
+    bed1:
       plant_type: vine1
       plant_height: 1.4
       rows_count: 1

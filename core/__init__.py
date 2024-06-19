@@ -36,7 +36,7 @@ if _reload_site:
     reload(site)
 
 from . import base
-from . import swaths
+from . import beds
 from . import ground
 from . import plant_manager
 from . import output

@@ -8,25 +8,25 @@ output:
     name: test1
 
 field:
-  swath_width: 1.5
-  swaths:
-    swath1:  
+  bed_width: 1.5
+  beds:
+    bed1:  
       plant_type: maize
       plant_height: .3
       plant_distance: .14
       row_distance: .75
       plants_count: 100
       rows_count: 2
-      swaths_count: 2
+      beds_count: 2
 
-    swath2:  
+    bed2:  
       plant_type: bean
       plant_height: .2
       plant_distance: .14
       row_distance: .325
       plants_count: 100
       rows_count: 4
-      swaths_count: 3
+      beds_count: 3
 
   noise:
     position: .009

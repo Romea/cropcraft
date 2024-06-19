@@ -22,7 +22,7 @@ class DataEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, config.Field):
             return o.as_dict()
-        if isinstance(o, config.Swath):
+        if isinstance(o, config.Bed):
             return o.as_dict()
         if is_dataclass(o):
             return asdict(o)

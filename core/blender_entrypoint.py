@@ -44,18 +44,18 @@ def main(argv: list):
     configure_random_seed(field)
     core.base.create_blender_context()
     
-    swaths = core.swaths.Swaths(field)
-    swaths.load_plants()
-    swaths.create_swaths()
+    beds = core.beds.Beds(field)
+    beds.load_plants()
+    beds.create_beds()
 
-    ground = core.ground.Ground(field, swaths)
+    ground = core.ground.Ground(field, beds)
     ground.load_weeds()
     ground.load_stones()
     ground.create_plane()
     ground.create_weeds()
     ground.create_stones()
 
-    look_at = swaths.get_center_pos()
+    look_at = beds.get_center_pos()
     look_at.x = 5.
     core.base.create_camera(look_at)
 
