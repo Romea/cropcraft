@@ -147,8 +147,8 @@ The key corresponds to the name of the swath.
   position in the row.
   You can use the `x` variable, any functions of the python `math` module and some built-in
   functions like `abs`, `min` or `max`.
-* `orientation` (choice: [random, aligned, zero], default: random): if the orientation is `random`,
-  the plant is oriented using a uniform distribution between 0° and 360°.
+* `orientation` (choice: [`random`, `aligned`, `zero`], default: `random`): if the orientation is
+  `random`, the plant is oriented using a uniform distribution between 0° and 360°.
   If it is `aligned`, the angle will be 0° or 180°.
   If it is `zero`, the angle will be only 0°.
 
@@ -232,6 +232,9 @@ output:
   out2:
     type: gazebo_model
     ...
+  out3:
+    type: description
+    ...
 ```
 
 The `output` block contains several key/value that correspond to a name that can be referenced by
@@ -262,6 +265,25 @@ out2:
 ```
 
 * `name`: name (and optionally a relative path) of the gazebo model directory to create
-* `author`: a string to add in the author field of the model config file
-* `use_absolute_path` (default: false): a boolean to enable/disable use of absolute path for
-  resources used in the SDF file.
+* `author` (optional): a string to add in the author field of the model config file
+* `use_absolute_path` (optional, default: false): a boolean to enable/disable use of absolute path
+  for resources used in the SDF file.
+
+#### Output type `description`
+
+```yaml
+out3:
+  type: description
+  format: json
+  filename: description.json
+```
+
+* `filename`: file name (and optionally a relative path) of the generated description file
+* `format` (optional, choice: [`json`, `messagepack`, `compressed_messagepack`]): the format of the
+  description file.
+  If this option is omitted, the format will be choosen based on the extension in the `filename`.
+  The following extension ae available:
+  - `.json` for the JSON format
+  - `.mpk` for the [MessagePack](https://msgpack.org/) format
+  - `.mpk.gz` for a compressed MessagePack using gzip 
+  If the extension is unknown, the JSON format is selected by default.
