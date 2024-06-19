@@ -22,8 +22,8 @@ class PlantModel:
     filename: str
     height: float
     filepath: str = None
-    width: float = None
-    leaf_area: float = None
+    width: float = 0.
+    leaf_area: float = 0.
 
 
 @dataclass
@@ -94,8 +94,8 @@ class PlantManager:
                 model = PlantModel(
                     filename=model_data['filename'],
                     height=model_data.get('height'),
-                    width=model_data.get('width'),
-                    leaf_area=model_data.get('leaf_area'),
+                    width=model_data.get('width', 0.),
+                    leaf_area=model_data.get('leaf_area', 0.),
                 )
                 model.filepath = os.path.join(plant_dir.path, model.filename)
                 group.append(model)
