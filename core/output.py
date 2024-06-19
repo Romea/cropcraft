@@ -48,9 +48,10 @@ class GazeboModel:
 @dataclass
 class Description:
     filename: str = None
+    format: str = None
 
     def export(self, output_dir: str, field: config.Field):
         filepath = os.path.join(output_dir, self.filename)
 
         description = FieldDescription(field)
-        description.dump(filepath)
+        description.dump(filepath, self.format)

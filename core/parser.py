@@ -169,6 +169,7 @@ def make_field_description(name: str, data: dict):
     output.filename = data.get('filename')
     if output.filename is None:
         raise ParserError("Missing element 'filename' in output config '{name}'")
+    output.format = data.get('format')
     return output
 
 

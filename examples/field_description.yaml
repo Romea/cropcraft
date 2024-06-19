@@ -1,11 +1,28 @@
-output_enabled: [blender, description]
 output:
   blender:
     type: blender_file
     filename: vineyard.blend
-  description:
+  description1:
     type: field_description
     filename: vineyard.json
+  description2:
+    type: field_description
+    filename: vineyard.mpk
+  description3:
+    type: field_description
+    filename: vineyard.mpk.gz
+  description4:
+    type: field_description
+    format: json
+    filename: vineyard_descr4
+  description5:
+    type: field_description
+    format: messagepack
+    filename: vineyard_descr5
+  description6:
+    type: field_description
+    format: compressed_messagepack
+    filename: vineyard_descr6
 
 field:
   headland_width: 8.

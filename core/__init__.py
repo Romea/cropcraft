@@ -24,6 +24,11 @@ if not find_spec('yaml'):
     pip.main(['install', 'pyyaml', '--user'])
     _reload_site = True
 
+if not find_spec('msgpack'):
+    import pip
+    pip.main(['install', 'msgpack', '--user'])
+    _reload_site = True
+
 # refresh sys.path
 if _reload_site:
     import site

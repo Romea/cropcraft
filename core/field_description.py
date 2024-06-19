@@ -12,6 +12,8 @@
 
 from dataclasses import is_dataclass, asdict
 import json
+import msgpack
+import gzip
 
 from . import config
 
@@ -30,11 +32,43 @@ class DataEncoder(json.JSONEncoder):
 class FieldDescription:
     def __init__(self, field: config.Field):
         self.field = field
+        self.export_fns = {
+            'json': self._export_json,
+            'messagepack': self._export_mpk,
+            'compressed_messagepack': self._export_mpkgz,
+        }
 
-    def dump(self, filename: str):
+    def dump(self, filename: str, format: str = None):
         data = {
-            "config": self.field,
+            'config': self.field,
             'field': self.field.state,
         }
-        with open(filename, "w") as file:
+        if format is None:
+            format = self._get_format_from_extension(filename)
+
+        export_fn = self.export_fns.get(format)
+        if export_fn is None:
+            raise Exception("Unknown export format for the description output of '{filename}'")
+        self.export_fns[format](data, filename)
+
+    def _export_json(self, data: dict, filename):
+        with open(filename, 'w') as file:
             json.dump(data, file, cls=DataEncoder)
+
+    def _export_mpk(self, data: dict, filename):
+        with open(filename, 'wb') as file:
+            encoder = DataEncoder()
+            msgpack.dump(data, file, default=encoder.default)
+
+    def _export_mpkgz(self, data: dict, filename):
+        with gzip.open(filename, 'wb') as file:
+            encoder = DataEncoder()
+            msgpack.dump(data, file, default=encoder.default)
+
+    def _get_format_from_extension(self, filename: str):
+        if filename.endswith('.mpk.gz'):
+            return 'compressed_messagepack'
+        if filename.endswith('.mpk'):
+            return 'messagepack'
+        # default to JSON
+        return 'json'
