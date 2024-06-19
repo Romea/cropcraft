@@ -125,7 +125,10 @@ def make_field(cfg: dict, cfg_dir: str):
 
     beds_data = field_data.get('beds')
     if beds_data is None:
-        raise ParserError("Missing element 'beds' as children of 'field'")
+        beds_data = field_data.get('swaths')
+        if beds_data is None:
+            raise ParserError("Missing element 'beds' as children of 'field'")
+        print("Warning: the keyword 'swaths' is deprecated. Use 'beds' instead")
 
     field.beds = [make_bed(name, data, field.default) for name, data in beds_data.items()]
 
