@@ -49,7 +49,7 @@ def main(argv: list):
     beds.create_beds()
 
     ground = core.ground.Ground(field, beds)
-    ground.load_weeds()
+    ground.load_weeds(beds.plant_mgr)
     ground.load_stones()
     ground.create_plane()
     ground.create_weeds()

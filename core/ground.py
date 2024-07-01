@@ -18,6 +18,7 @@ import itertools
 from . import config, input_utils
 from .beds import Beds
 from .model_import import obj_import
+from .plant_manager import PlantManager
 
 
 def create_plane_object(name: str, width: float, length: float, offset: float):
@@ -45,7 +46,7 @@ class Ground:
         self.assets_path = os.path.abspath('assets')
         self.rand = random.Random(random.getrandbits(32))
 
-    def load_weeds(self):
+    def load_weeds(self, plant_manager: PlantManager):
         weeds_collection = bpy.data.collections['weeds']
 
         view_layer = bpy.context.view_layer
@@ -54,27 +55,18 @@ class Ground:
 
         selected_weed_types = [w.plant_type for w in self.field.weeds]
 
-        assets_paths = os.scandir(os.path.join(self.assets_path, 'weeds'))
+        for weed_type in selected_weed_types:
+            # only use the smallest plant group for weeds
+            plant_group = plant_manager.get_group_by_height(weed_type, 0.)
 
-        user_weeds_dir = os.path.join(input_utils.user_data_dir(), 'weeds')
-        if os.path.isdir(user_weeds_dir):
-            local_paths = os.scandir()
-        else:
-            local_paths = []
-
-        for weed_dir in itertools.chain(local_paths, assets_paths):
-            if weed_dir.name not in selected_weed_types:
-                continue
-
-            collection = bpy.data.collections.new(weed_dir.name)
+            collection = bpy.data.collections.new(weed_type)
             weeds_collection.children.link(collection)
-            group_layer_coll = weeds_layer_coll.children[weed_dir.name]
+            group_layer_coll = weeds_layer_coll.children[weed_type]
 
-            models = filter(lambda x: x.endswith('.obj'), os.listdir(weed_dir.path))
-
-            for model in models:
+            for model in plant_group.models:
                 view_layer.active_layer_collection = group_layer_coll
-                obj_import(os.path.join(weed_dir.path, model))
+                obj_import(model.filepath)
+            
 
     def load_stones(self):
         view_layer = bpy.context.view_layer
