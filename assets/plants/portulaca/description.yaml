@@ -1,0 +1,32 @@
+model_groups:
+  all:
+    minimal_height: 0.
+    models:
+      - filename: portulaca_01.obj
+        height: 0.024
+        width: 0.402
+        leaf_area: 0.03419
+      - filename: portulaca_02.obj
+        height: 0.026
+        width: 0.344
+        leaf_area: 0.02182
+      - filename: portulaca_03.obj
+        height: 0.019
+        width: 0.273
+        leaf_area: 0.01148
+      - filename: portulaca_04.obj
+        height: 0.019
+        width: 0.324
+        leaf_area: 0.01810
+      - filename: portulaca_05.obj
+        height: 0.012
+        width: 0.178
+        leaf_area: 0.00584
+      - filename: portulaca_06.obj
+        height: 0.010
+        width: 0.136
+        leaf_area: 0.00353
+      - filename: portulaca_07.obj
+        height: 0.015
+        width: 0.267
+        leaf_area: 0.00758
