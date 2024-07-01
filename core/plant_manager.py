@@ -105,7 +105,7 @@ class PlantManager:
             else:
                 groups[group_name] = group
 
-    def get_group_by_height(self, type: str, height: float):
+    def get_group_by_height(self, type: str, height: float) -> PlantGroup:
         if type not in self.plant_groups:
             return None
 
@@ -118,3 +118,6 @@ class PlantManager:
             group = cur_group
 
         return group
+
+    def get_groups(self, type: str) -> typing.List[PlantGroup]:
+        return self.plant_groups.get(type)
