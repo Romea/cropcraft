@@ -4,7 +4,7 @@ All the default models and textures are stored in the [assets](assets) directory
 The folder is organized as follows:
 
 * `plants` contains sub-folders corresponding to different type of plants you can use for the
-  `plant_type` parameter of the beds in the configuration file
+  `plant_type` parameter of the beds and the weeds in the configuration file
 * `stones` contains models used by the `stones` block of the configuration file
 * `textures` contains the texture file of the ground
 * `weeds` contains sub-folders corresponding to different type of weeds you can use for the
@@ -22,8 +22,8 @@ For example, if you use Linux, you can add a leek model by creating the director
 
 ## Add a plant type
 
-To create a new plant type that can be used in a bed, you need to export the 3D model as a
-Wavefront (`.obj`) model in a sub-directory of `plants`.
+To create a new plant type that can be used in a bed or as weeds, you need to export the 3D model as
+a Wavefront (`.obj`) model in a sub-directory of `plants`.
 The name of this sub-directory corresponds to the ID to use for the `plant_type` parameter of a
 bed block in a configuration file.
 If your model have a material and a texture file, it can be placed in the same directory as the
@@ -73,15 +73,5 @@ For each model, you have to specify the following elements:
 * `width` (optional, in meters): the width of the plant
 * `leaf_area` (optional, in square meters): the leaf area of the plant
 
-
-## Add a weed type
-
-To create a new weed type that can be used in a field, you need to export the 3D model as a
-Wavefront (`.obj`) model in a sub-directory of `weeds`.
-The name of this sub-directory corresponds to the ID to use for the `plant_type` parameter of a
-weeds block in a configuration file.
-If your model have a material and a texture file, it can be placed in the same directory as the
-`.obj` file.
-If you have different versions of the same plant, you need to create a separate `.obj` file for
-each model.
-The scattering algorithm will pick a random model among the ones present in this directory.
+If the model is used in the `weeds` field of the configuration file, only the smallest height group
+is used.
