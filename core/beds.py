@@ -87,11 +87,6 @@ class Beds:
         orientation_fn = self.orientation_fns[bed.orientation]
         row_offset = (bed.bed_width - (bed.rows_count - 1) * bed.row_distance) / 2.0
 
-        id_tuples = itertools.product(
-            range(bed.beds_count),
-            range(bed.rows_count),
-            range(bed.plants_count),
-        )
         vertices = []
         scales = []
         rotations = []

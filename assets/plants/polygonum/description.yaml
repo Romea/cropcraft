@@ -1,0 +1,32 @@
+model_groups:
+  all:
+    minimal_height: 0.
+    models:
+      - filename: polygonum_01.obj
+        height: 0.08
+        width: 0.36
+        leaf_area: 0.03940
+      - filename: polygonum_02.obj
+        height: 0.023
+        width: 0.44
+        leaf_area: 0.01954
+      - filename: polygonum_03.obj
+        height: 0.045
+        width: 0.398
+        leaf_area: 0.02616
+      - filename: polygonum_04.obj
+        height: 0.037
+        width: 0.254
+        leaf_area: 0.01286
+      - filename: polygonum_05.obj
+        height: 0.042
+        width: 0.281
+        leaf_area: 0.01172
+      - filename: polygonum_06.obj
+        height: 0.050
+        width: 0.148
+        leaf_area: 0.00346
+      - filename: polygonum_07.obj
+        height: 0.053
+        width: 0.246
+        leaf_area: 0.01024
