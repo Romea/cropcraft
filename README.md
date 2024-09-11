@@ -18,9 +18,9 @@ It is a 3D modeling software that you can dowload from the
 [official website](https://www.blender.org/download/).
 If you use Ubuntu, you can install it using snap:
 ```
-snap install blender --channel=4.1/stable --classic
+snap install blender --classic
 ```
-The required version is between `4.0` and `4.1`.
+The minimal required version is `4.0`.
 Ensure that blender is launchable from the command line.
 It means that blender must be accessible using the `PATH` environment variable.
 
