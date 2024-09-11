@@ -1,0 +1,26 @@
+model_groups:
+  small:
+    minimal_height: 0.
+    models:
+      - filename: maize_small.obj
+        height: 0.21
+        width: 0.09
+  medium:
+    minimal_height: 0.24
+    models:
+      - filename: maize_medium.obj
+        height: 0.35
+        width: 0.20
+  big:
+    minimal_height: 0.4
+    models:
+      - filename: maize_big_1.obj
+        height: 0.49
+        width: 0.33
+      - filename: maize_big_2.obj
+        height: 0.40
+        width: 0.33
+      - filename: maize_big_3.obj
+        height: 0.45
+        width: 0.30
+

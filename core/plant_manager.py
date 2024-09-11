@@ -25,30 +25,6 @@ class PlantModel:
     width: float = 0.
     leaf_area: float = 0.
 
-
-@dataclass
-class PlantGroup:
-    type: str
-    name: str
-    min_height: float
-    models: typing.List[PlantModel] = field(default_factory=lambda: [])
-
-    def __hash__(self):
-        return hash((self.type, self.name))
-
-    def full_name(self):
-        return f"{self.type}_{self.name}"
-
-    def average_height(self):
-        sum = 0.
-        for model in self.models:
-            sum += model.height
-        return sum / len(self.models) if len(self.models) else self.min_height
-
-    def append(self, model: PlantModel):
-        self.models.append(model)
-
-
 @dataclass
 class Plant:
     x: float = 0.
@@ -79,45 +55,42 @@ class PlantManager:
     def update_groups(self, plant_dir: os.DirEntry, description: dict):
         plant_type = plant_dir.name
 
-        if plant_type not in self.plant_groups:
-            self.plant_groups[plant_type] = {}
-
-        groups = self.plant_groups[plant_type]
-
-        for group_name, group_data in description['model_groups'].items():
-            group = PlantGroup(
-                type=plant_type,
-                name=group_name,
-                min_height=group_data['minimal_height'],
+        model_list = []
+        for model_data in description['models']:
+            model = PlantModel(
+                filename=model_data['filename'],
+                height=model_data.get('height'),
+                width=model_data.get('width', 0.),
+                leaf_area=model_data.get('leaf_area', 0.),
             )
-            for model_data in group_data['models']:
-                model = PlantModel(
-                    filename=model_data['filename'],
-                    height=model_data.get('height'),
-                    width=model_data.get('width', 0.),
-                    leaf_area=model_data.get('leaf_area', 0.),
-                )
-                model.filepath = os.path.join(plant_dir.path, model.filename)
-                group.append(model)
+            model.filepath = os.path.join(plant_dir.path, model.filename)
+            model_list.append(model)
+        self.plant_groups[plant_type] = model_list
 
+<<<<<<< HEAD
             if group_name in groups:
                 groups[group_name].models += group.models
             else:
                 groups[group_name] = group
 
     def get_group_by_height(self, type: str, height: float) -> PlantGroup:
+=======
+    def get_model_list_by_height(self, type: str, height: float, tolerance_coeff):
+>>>>>>> cb6b1f2 (Change plant manager to remove size groups from description)
         if type not in self.plant_groups:
             return None
 
-        groups = self.plant_groups[type]
+        model_list = self.plant_groups[type]
 
-        group = None
-        for cur_group in groups.values():
-            if cur_group.min_height > height:
-                break
-            group = cur_group
+        lower_bound = (1 - tolerance_coeff) * height
+        higher_bound = (1 + tolerance_coeff) * height
 
+<<<<<<< HEAD
         return group
 
     def get_groups(self, type: str) -> typing.List[PlantGroup]:
         return self.plant_groups.get(type)
+=======
+        correct_models = [model for model in model_list if model.height >= lower_bound and model.height <= higher_bound]
+        return correct_models if correct_models else None
+>>>>>>> cb6b1f2 (Change plant manager to remove size groups from description)

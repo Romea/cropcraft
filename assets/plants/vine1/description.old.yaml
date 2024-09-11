@@ -1,0 +1,20 @@
+model_groups:
+  medium:
+    minimal_height: 0.
+    models:
+      - filename: vine_01.obj
+        height: 1.4
+        width: 1.2
+        leaf_area: 1.82244
+      - filename: vine_02.obj
+        height: 1.4
+        width: 1.2
+        leaf_area: 1.66187
+      - filename: vine_03.obj
+        height: 1.4
+        width: 1.2
+        leaf_area: 1.45718
+      - filename: vine_04.obj
+        height: 1.4
+        width: 1.2
+        leaf_area: 1.43463

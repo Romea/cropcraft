@@ -12,10 +12,10 @@ field:
   row_distance: 0.
 
   beds:
-    bed1: { plant_height: .05 }
-    bed2: { plant_height: .10 }
-    bed3: { plant_height: .15 }
-    bed4: { plant_height: .20 }
+    bed1: { plant_height: .05, height_tolerance_coeff: 4 }
+    bed2: { plant_height: .10, height_tolerance_coeff: 2 }
+    bed3: { plant_height: .15, height_tolerance_coeff: 1 }
+    bed4: { plant_height: .20, height_tolerance_coeff: 0.2 }
     bed5: { plant_height: .25 }
     bed6: { plant_height: .30 }
     bed7: { plant_height: .35 }
