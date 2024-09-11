@@ -11,7 +11,6 @@
 # limitations under the License.
 
 import bpy
-from bpy.app.handlers import persistent
 import mathutils
 
 from . import geometry_nodes
