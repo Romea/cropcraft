@@ -22,6 +22,7 @@ field:
     bed1:  
       plant_type: bean
       plant_height: .12
+      height_tolerance_coeff: .3
       row_distance: .4
       rows_count: 3
     bed2:  
@@ -111,6 +112,7 @@ In this case, these parameters are used as default values for the beds.
 my_bed1:
   plant_type: bean
   plant_height: .12
+  height_tolerance_coeff: .3
   row_distance: .52
   rows_count: 3
   bed_width: 1.57
@@ -131,6 +133,7 @@ The key corresponds to the name of the bed.
   The current types available are `maize` and `bean`.
 * `plant_height` (in meters): the desired height for the plants.
   The models are grouped by height and are rescaled to correspond to the desired height.
+* `height_tolerance_coeff`(default: 0.2): a tolerance coefficient for the plant height. The models will be selected within `(1 ± height_tolerance_coeff)* plant_height`.  
 * `plant_distance` (in meters): the distance between each crop in a row.
 * `bed_width` (in meters): the with of the bed.
   The next bed will be generated with an offset corresponding to the `bed_width` multiplied by

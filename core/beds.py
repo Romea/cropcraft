@@ -16,7 +16,6 @@ import os
 import mathutils
 import random
 import math
-import logging
 
 from .plant_manager import PlantManager
 from . import config

@@ -36,35 +36,24 @@ the models.
 Here is an example of a `description.yaml` file:
 
 ```yaml
-model_groups:
-  small:
-    minimal_height: 0.
-    models:
-      - filename: sorghum_small_01.obj
-        height: 0.12
-        width: 0.08
-        leaf_area: 0.352
-      - filename: sorghum_small_02.obj
-        height: 0.16
-        width: 0.09
-        leaf_area: 0.390
-  big:
-    minimal_height: 0.40
-    models:
-      - filename: sorghum_big_01.obj
-        height: 0.47
-        width: 0.31
-        leaf_area: 0.648
-      - filename: sorghum_big_02.obj
-        height: 0.43
-        width: 0.28
-        leaf_area: 0.713
+models:
+  - filename: sorghum_small_01.obj
+    height: 0.12
+    width: 0.08
+    leaf_area: 0.352
+  - filename: sorghum_small_02.obj
+    height: 0.16
+    width: 0.09
+    leaf_area: 0.390
+  - filename: sorghum_big_01.obj
+    height: 0.47
+    width: 0.31
+    leaf_area: 0.648
+  - filename: sorghum_big_02.obj
+    height: 0.43
+    width: 0.28
+    leaf_area: 0.713
 ```
-
-The models are separated into several `model_groups`.
-For each one, you have to specify the `minimal_height`.
-This parameter is compared to the desired height defined in the bed configuration and allows to
-select the correct model group used to generate the bed.
 
 For each model, you have to specify the following elements:
 
