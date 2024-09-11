@@ -12,27 +12,34 @@
 
 _reload_site = False
 
-from importlib.util import find_spec
+from importlib.util import find_spec as _find_spec
+import subprocess as _subprocess
+import sys as _sys
 
-if not find_spec('appdirs'):
-    import pip
-    pip.main(['install', 'appdirs', '--user'])
+
+def _install_pkg(package):
+    _subprocess.check_call(
+        [_sys.executable,  '-m', 'pip', '--disable-pip-version-check', 'install', package]
+    )
+
+
+if not _find_spec('appdirs'):
+    _install_pkg('appdirs')
     _reload_site = True
 
-if not find_spec('yaml'):
-    import pip
-    pip.main(['install', 'pyyaml', '--user'])
+if not _find_spec('yaml'):
+    _install_pkg('pyyaml')
     _reload_site = True
 
-if not find_spec('msgpack'):
-    import pip
-    pip.main(['install', 'msgpack', '--user'])
+if not _find_spec('msgpack'):
+    _install_pkg('msgpack')
     _reload_site = True
 
 # refresh sys.path
 if _reload_site:
     import site
     from importlib import reload
+
     reload(site)
 
 from . import base
