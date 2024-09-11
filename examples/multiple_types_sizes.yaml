@@ -15,6 +15,7 @@ field:
     bed1:  
       plant_type: bean
       plant_height: .12
+      height_tolerance_coeff: 0.4
       row_distance: .4
       rows_count: 4
     bed2:  
@@ -30,6 +31,7 @@ field:
     bed4:  
       plant_type: maize
       plant_height: .12
+      height_tolerance_coeff: .9
       row_distance: .45
       rows_count: 4
 

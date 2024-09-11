@@ -1,0 +1,20 @@
+model_groups:
+  small:
+    minimal_height: 0.
+    models:
+      - filename: bean_small.obj
+        height: 0.05
+        width: 0.06
+  medium:
+    minimal_height: 0.1
+    models:
+      - filename: bean_medium.obj
+        height: 0.135
+        width: 0.11
+  big:
+    minimal_height: 0.2
+    models:
+      - filename: bean_big.obj
+        height: 0.217
+        width: 0.16
+

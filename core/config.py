@@ -19,6 +19,7 @@ class Bed:
     name: str = None
     plant_type: str = None
     plant_height: float = None
+    height_tolerance_coeff: float = .2
     plant_distance: float = None
     bed_width: float = None
     row_distance: float = None

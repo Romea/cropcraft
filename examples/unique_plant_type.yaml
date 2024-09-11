@@ -10,6 +10,7 @@ field:
     bed1:  
       plant_type: bean
       plant_height: .17
+      height_tolerance_coeff: .22
       plant_distance: .15
       row_distance: .4
       plants_count: 100

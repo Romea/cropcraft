@@ -38,6 +38,7 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
 
     bed.plant_type = get_element('plant_type', default.plant_type)
     bed.plant_height = get_element('plant_height', default.plant_height)
+    bed.height_tolerance_coeff = get_element('height_tolerance_coeff', default.height_tolerance_coeff)
     bed.plant_distance = get_element('plant_distance', default.plant_distance)
     bed.row_distance = get_element('row_distance', default.row_distance)
     bed.rows_count = get_element('rows_count', default.rows_count)

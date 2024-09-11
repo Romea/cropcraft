@@ -16,6 +16,7 @@ import os
 import mathutils
 import random
 import math
+import logging
 
 from .plant_manager import PlantManager
 from . import config
@@ -40,19 +41,19 @@ class Beds:
         }
 
     def load_plants(self):
-        groups = set()
+        groups = {}
         for bed in self.field.beds:
-            group = self.plant_mgr.get_group_by_height(bed.plant_type, bed.plant_height)
+            models = self.plant_mgr.get_model_list_by_height(bed.plant_type, bed.plant_height, bed.height_tolerance_coeff)
 
-            if not group:
+            if not models:
                 raise RuntimeError(
-                    "Error: plant type '{}' and height '{}' is unknown.".format(
-                        bed.plant_type, bed.plant_height
+                    "Error: plant type '{}' and height '{}' with tolerance '{}' is unknown.".format(
+                        bed.plant_type, bed.plant_height, bed.height_tolerance_coeff
                     )
                 )
 
-            groups.add(group)
-            self.bed_plant_groups[bed.name] = group
+            groups[bed.name] = models
+            self.bed_plant_groups[bed.name] = (bed.plant_type, models)
 
         plants_collection = bpy.data.collections['plants']
 
@@ -60,13 +61,12 @@ class Beds:
         scene_layer_coll = view_layer.layer_collection
         plants_layer_coll = scene_layer_coll.children['resources'].children['plants']
 
-        for group in groups:
-            full_name = group.full_name()
-            collection = bpy.data.collections.new(full_name)
+        for group_name, models in groups.items():
+            collection = bpy.data.collections.new(group_name)
             plants_collection.children.link(collection)
-            plant_layer_coll = plants_layer_coll.children[full_name]
+            plant_layer_coll = plants_layer_coll.children[group_name]
 
-            for model in group.models:
+            for model in models:
                 view_layer.active_layer_collection = plant_layer_coll
                 obj_import(model.filepath)
 
@@ -92,9 +92,15 @@ class Beds:
         rotations = []
         indexes = []
 
-        plant_group = self.plant_mgr.get_group_by_height(bed.plant_type, bed.plant_height)
-        group_height = plant_group.average_height()
-        nb_plants = len(plant_group.models)
+        plant_models = self.plant_mgr.get_model_list_by_height(bed.plant_type, bed.plant_height, bed.height_tolerance_coeff)
+        if (not plant_models):
+            raise RuntimeError(
+                "Error: plant type '{}' and height '{}' with tolerance '{}' is unknown.".format(
+                    bed.plant_type, bed.plant_height, bed.height_tolerance_coeff
+                )
+            )
+        nb_plants = len(plant_models)
+        group_height = sum([m.height for m in plant_models]) / float(nb_plants)
 
         for bed_i in range(bed.beds_count):
             bed_state = config.BedState()
@@ -128,7 +134,7 @@ class Beds:
                     index = self.rand.randint(0, nb_plants - 1)
                     indexes.append(index)
 
-                    plant_model = plant_group.models[index]
+                    plant_model = plant_models[index]
 
                     plant_state = config.PlantState(
                         x=x,
@@ -180,7 +186,7 @@ class Beds:
         modifier = object.modifiers.new(name, 'NODES')
         modifier.node_group = bpy.data.node_groups['crops']
 
-        collection_name = self.bed_plant_groups[name].full_name()
+        collection_name = name
         plant_collection = bpy.data.collections[collection_name]
         modifier['Socket_2'] = plant_collection
 
