@@ -56,6 +56,7 @@ field:
 
     polygonum:
       plant_type: polygonum
+      max_height: 0.03
       density: 0.1
 
     taraxacum:

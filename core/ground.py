@@ -53,17 +53,17 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
 
-        selected_weed_types = [w.plant_type for w in self.field.weeds]
+        selected_weed_types_height = [(w.plant_type, w.max_height) for w in self.field.weeds]
 
-        for weed_type in selected_weed_types:
-            # only use the smallest plant group for weeds
-            plant_group = plant_manager.get_group_by_height(weed_type, 0.)
+        for weed_type, weed_height in selected_weed_types_height:
+            # get models from 0 to max_height
+            plant_group = plant_manager.get_model_list_by_height(weed_type, weed_height / 2.0, 1)
 
             collection = bpy.data.collections.new(weed_type)
             weeds_collection.children.link(collection)
             group_layer_coll = weeds_layer_coll.children[weed_type]
 
-            for model in plant_group.models:
+            for model in plant_group:
                 view_layer.active_layer_collection = group_layer_coll
                 obj_import(model.filepath)
             

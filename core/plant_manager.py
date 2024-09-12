@@ -67,16 +67,7 @@ class PlantManager:
             model_list.append(model)
         self.plant_groups[plant_type] = model_list
 
-<<<<<<< HEAD
-            if group_name in groups:
-                groups[group_name].models += group.models
-            else:
-                groups[group_name] = group
-
-    def get_group_by_height(self, type: str, height: float) -> PlantGroup:
-=======
-    def get_model_list_by_height(self, type: str, height: float, tolerance_coeff):
->>>>>>> cb6b1f2 (Change plant manager to remove size groups from description)
+    def get_model_list_by_height(self, type: str, height: float, tolerance_coeff) -> typing.List[PlantModel]:
         if type not in self.plant_groups:
             return None
 
@@ -85,12 +76,5 @@ class PlantManager:
         lower_bound = (1 - tolerance_coeff) * height
         higher_bound = (1 + tolerance_coeff) * height
 
-<<<<<<< HEAD
-        return group
-
-    def get_groups(self, type: str) -> typing.List[PlantGroup]:
-        return self.plant_groups.get(type)
-=======
         correct_models = [model for model in model_list if model.height >= lower_bound and model.height <= higher_bound]
         return correct_models if correct_models else None
->>>>>>> cb6b1f2 (Change plant manager to remove size groups from description)
