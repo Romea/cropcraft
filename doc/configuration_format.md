@@ -41,6 +41,7 @@ field:
     portulaca:
       plant_type: portulaca
       density: 3.
+      max_height: .02
     polygonum:
       plant_type: polygonum
       distance_min: 0.16
@@ -194,6 +195,7 @@ The `weeds` block of the `field` contains several key/value that correspond to a
 scattering configuration block.
 
 * `plant_type`: a string that corresponds to the name of the weed model
+* `max_height` (in meters, default: 0.1): the maximum height of weed models to include
 * `density`: a float that control the quantity of weeds that is generated
 * `distance_min` (in meters, default: 0.12): minimal distance between generated weeds
 * `scattering_mode` (default:'noise'): a string setting the mode of the scattering.

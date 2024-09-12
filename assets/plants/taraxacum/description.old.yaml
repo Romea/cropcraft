@@ -1,0 +1,32 @@
+model_groups:
+  all:
+    minimal_height: 0.
+    models:
+      - filename: taraxacum_01.obj
+        height: 0.061
+        width: 0.389
+        leaf_area: 0.05499
+      - filename: taraxacum_02.obj
+        height: 0.045
+        width: 0.316
+        leaf_area: 0.02046
+      - filename: taraxacum_03.obj
+        height: 0.066
+        width: 0.364
+        leaf_area: 0.04969
+      - filename: taraxacum_04.obj
+        height: 0.031
+        width: 0.172
+        leaf_area: 0.00528
+      - filename: taraxacum_05.obj
+        height: 0.038
+        width: 0.227
+        leaf_area: 0.01071
+      - filename: taraxacum_06.obj
+        height: 0.045
+        width: 0.265
+        leaf_area: 0.01848
+      - filename: taraxacum_07.obj
+        height: 0.014
+        width: 0.101
+        leaf_area: 0.00143

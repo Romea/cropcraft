@@ -94,6 +94,7 @@ def make_weed(name: str, data: dict, cfg_dir: str):
     if weed.plant_type is None:
         raise ParserError(f"Missing element 'plant_type' as children of '{name}'")
 
+    weed.max_height = data.get('max_height', weed.max_height)
     weed.density = data.get('density', weed.density)
     weed.distance_min = data.get('distance_min', weed.distance_min)
 

@@ -50,6 +50,7 @@ class Noise:
 class Weed:
     name: str = None
     plant_type: str = None
+    max_height: float = 0.1
     density: float = 5.0
     distance_min: float = 0.12
     scattering_mode: str = "noise"

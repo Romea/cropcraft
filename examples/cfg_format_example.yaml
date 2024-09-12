@@ -36,6 +36,7 @@ field:
   weeds:
     portulaca:
       plant_type: portulaca
+      max_height: 0.02
       density: 3.
     polygonum:
       plant_type: polygonum
