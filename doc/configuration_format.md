@@ -117,6 +117,7 @@ my_bed1:
   plants_count: 100
   beds_count: 10
   plant_distance: .15
+  length: 15.
   shift_next_bed: false
   offset: [0., .3, 0.]
   y_function: '1.4 * sin(x * tau / 15.)'
@@ -135,7 +136,9 @@ The key corresponds to the name of the bed.
   The next bed will be generated with an offset corresponding to the `bed_width` multiplied by
   `bed_count` but only if `shift_next_bed` is disabled.
 * `row_distance` (in meters): distance between two consecutive rows in the bed.
-* `plants_count`: number of plants in a row.
+* `plants_count`: number of plants in a row. `crops_count` is also accepted.
+* `length`: (in meters) length of the bed.
+  It is used to compute the number of plants (only if `plants_count` is not specified)
 * `rows_count` (default: 1): number of rows in a bed.
 * `beds_count` (default: 1): number of bed (the same configuration is repeated).
 * `shift_next_bed` (default: true): a boolean to enable/disable the shift of the next bed.
