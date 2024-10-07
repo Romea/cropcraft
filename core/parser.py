@@ -58,10 +58,13 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
 
     # if not specified, 'plant_count' is computed from 'length' and 'plant_distance'
     bed.length = data.get('length', default.length)
-    bed.plants_count = data.get('crops_count') or data.get('plants_count', default.plants_count)
+    bed.plants_count = data.get('crops_count') or data.get('plants_count')
     if bed.plants_count is None:
         if bed.length is not None and bed.plant_distance is not None:
             bed.plants_count = int(bed.length / bed.plant_distance)
+        else:
+            bed.plants_count = default.plants_count
+
         if not allow_none and bed.plants_count is None:
             error("unable to dertemine number of plants. Specify 'plant_count' or 'length'.")
 
