@@ -27,17 +27,19 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
     bed = config.Bed()
     bed.name = name
 
+    def error(msg: str):
+        raise ParserError(f"in bed '{name}': {msg}")
+
     def get_element(field, default):
         value = data.get(field, default)
         if not allow_none and value is None:
-            raise ParserError(f"Missing element '{field}' and no default value")
+            error(f"missing element '{field}' and no default value")
         return value
 
     bed.plant_type = get_element('plant_type', default.plant_type)
     bed.plant_height = get_element('plant_height', default.plant_height)
     bed.plant_distance = get_element('plant_distance', default.plant_distance)
     bed.row_distance = get_element('row_distance', default.row_distance)
-    bed.plants_count = get_element('plants_count', default.plants_count)
     bed.rows_count = get_element('rows_count', default.rows_count)
     bed.beds_count = get_element('beds_count', default.beds_count)
     bed.bed_width = get_element('bed_width', default.bed_width)
@@ -46,13 +48,24 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
     bed.orientation = get_element('orientation', default.orientation)
 
     if bed.orientation not in ['random', 'aligned', 'zero']:
-        raise ParserError(f"The value '{bed.orientation}' is invalid for {name}.orientation")
+        error(f"the value '{bed.orientation}' is invalid for {name}.orientation")
 
     y_fn_expr = data.get('y_function')
     if y_fn_expr is not None:
         bed.y_function = input_utils.safe_eval_fn('x', y_fn_expr)
     else:
         bed.y_function = default.y_function
+
+    # if not specified, 'plant_count' is computed from 'length' and 'plant_distance'
+    bed.length = data.get('length', default.length)
+    bed.plants_count = data.get('crops_count') or data.get('plants_count', default.plants_count)
+    if bed.plants_count is None:
+        if bed.length is not None and bed.plant_distance is not None:
+            bed.plants_count = int(bed.length / bed.plant_distance)
+        if not allow_none and bed.plants_count is None:
+            error("unable to dertemine number of plants. Specify 'plant_count' or 'length'.")
+
+    print(f"plants count: {bed.plants_count}")
 
     return bed
 
@@ -81,12 +94,12 @@ def make_weed(name: str, data: dict, cfg_dir: str):
     weed.distance_min = data.get('distance_min', weed.distance_min)
 
     weed.scattering_mode = data.get('scattering_mode', weed.scattering_mode)
-    if weed.scattering_mode not in ('noise', 'image'): 
+    if weed.scattering_mode not in ('noise', 'image'):
         raise ParserError(f"Invalid '{name}.scattering_mode': options are 'noise' or 'image'")
 
     weed.noise_scale = data.get('noise_scale', weed.noise_scale)
     weed.noise_offset = data.get('noise_offset', weed.noise_offset)
-    if weed.noise_offset < -1. or weed.noise_offset > 1.:
+    if weed.noise_offset < -1.0 or weed.noise_offset > 1.0:
         raise ParserError(f"The '{name}.noise_offset' value must be between -1. and 1.")
 
     if weed.scattering_mode == 'image':
@@ -109,7 +122,7 @@ def make_stones(field: dict):
     stones.distance_min = data.get('distance_min', stones.distance_min)
     stones.noise_scale = data.get('noise_scale', stones.noise_scale)
     stones.noise_offset = data.get('noise_offset', stones.noise_offset)
-    if stones.noise_offset < -1. or stones.noise_offset > 1.:
+    if stones.noise_offset < -1.0 or stones.noise_offset > 1.0:
         raise ParserError("The 'stones.noise_offset' value must be between -1. and 1.")
     return stones
 
@@ -139,8 +152,9 @@ def make_field(cfg: dict, cfg_dir: str):
     field.stones = make_stones(field_data)
 
     field.headland_width = field_data.get('headland_width', field.headland_width)
-    field.scattering_extra_width = field_data.get('scattering_extra_width',
-                                                  field.scattering_extra_width)
+    field.scattering_extra_width = field_data.get(
+        'scattering_extra_width', field.scattering_extra_width
+    )
     field.seed = field_data.get('random_seed')
 
     return field
@@ -218,7 +232,7 @@ def make_outputs(cfg: dict):
 def load_yaml_config(filename: str):
     with open(filename, 'r') as file:
         cfg_data = yaml.safe_load(file.read())
-    
+
     cfg = config.Config()
     cfg.field = make_field(cfg_data, os.path.dirname(filename))
     cfg.outputs = make_outputs(cfg_data)

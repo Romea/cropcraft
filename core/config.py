@@ -25,6 +25,7 @@ class Bed:
     plants_count: int = None
     rows_count: int = 1
     beds_count: int = 1
+    length: float = None
     shift_next_bed: bool = True
     offset: typing.List[float] = field(default_factory=lambda: [0.0, 0.0, 0.0])
     y_function: typing.Callable[float, float] = lambda x: 0.0
