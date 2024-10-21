@@ -272,11 +272,11 @@ out2:
 * `use_absolute_path` (optional, default: false): a boolean to enable/disable use of absolute path
   for resources used in the SDF file.
 
-#### Output type `description`
+#### Output type `field_description`
 
 ```yaml
 out3:
-  type: description
+  type: field_description
   format: json
   filename: description.json
 ```
@@ -284,8 +284,8 @@ out3:
 * `filename`: file name (and optionally a relative path) of the generated description file
 * `format` (optional, choice: [`json`, `messagepack`, `compressed_messagepack`]): the format of the
   description file.
-  If this option is omitted, the format will be choosen based on the extension in the `filename`.
-  The following extension ae available:
+  If this option is omitted, the format will be chosen based on the extension in the `filename`.
+  The following extension are available:
   - `.json` for the JSON format
   - `.mpk` for the [MessagePack](https://msgpack.org/) format
   - `.mpk.gz` for a compressed MessagePack using gzip 
