@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import typing
 import os
 
@@ -22,24 +22,24 @@ class PlantModel:
     filename: str
     height: float
     filepath: str = None
-    width: float = 0.
-    leaf_area: float = 0.
+    width: float = 0.0
+    leaf_area: float = 0.0
+
 
 @dataclass
 class Plant:
-    x: float = 0.
-    y: float = 0.
-    radius: float = 0.
-    height: float = 0.
+    x: float = 0.0
+    y: float = 0.0
+    radius: float = 0.0
+    height: float = 0.0
 
 
 class PlantManager:
-
     def __init__(self):
         self.plant_groups = {}
-        self.load_plants(os.path.abspath('assets/plants'))
+        self.load_plants(os.path.abspath("assets/plants"))
 
-        user_plants_dir = os.path.join(input_utils.user_data_dir(), 'plants')
+        user_plants_dir = os.path.join(input_utils.user_data_dir(), "plants")
         if os.path.isdir(user_plants_dir):
             self.load_plants(user_plants_dir)
 
@@ -48,7 +48,7 @@ class PlantManager:
             return
 
         for plant_dir in os.scandir(dirname):
-            data = input_utils.load_config_file('description', plant_dir.path)
+            data = input_utils.load_config_file("description", plant_dir.path)
             if data is not None:
                 self.update_groups(plant_dir, data)
 
@@ -56,18 +56,20 @@ class PlantManager:
         plant_type = plant_dir.name
 
         model_list = []
-        for model_data in description['models']:
+        for model_data in description["models"]:
             model = PlantModel(
-                filename=model_data['filename'],
-                height=model_data.get('height'),
-                width=model_data.get('width', 0.),
-                leaf_area=model_data.get('leaf_area', 0.),
+                filename=model_data["filename"],
+                height=model_data.get("height"),
+                width=model_data.get("width", 0.0),
+                leaf_area=model_data.get("leaf_area", 0.0),
             )
             model.filepath = os.path.join(plant_dir.path, model.filename)
             model_list.append(model)
         self.plant_groups[plant_type] = model_list
 
-    def get_model_list_by_height(self, type: str, height: float, tolerance_coeff) -> typing.List[PlantModel]:
+    def get_model_list_by_height(
+        self, type: str, height: float, tolerance_coeff
+    ) -> typing.List[PlantModel]:
         if type not in self.plant_groups:
             return None
 
@@ -76,5 +78,9 @@ class PlantManager:
         lower_bound = (1 - tolerance_coeff) * height
         higher_bound = (1 + tolerance_coeff) * height
 
-        correct_models = [model for model in model_list if model.height >= lower_bound and model.height <= higher_bound]
+        correct_models = [
+            model
+            for model in model_list
+            if model.height >= lower_bound and model.height <= higher_bound
+        ]
         return correct_models if correct_models else None
