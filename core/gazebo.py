@@ -81,6 +81,8 @@ material {name}
       cull_hardware none
       cull_software none
 
+      alpha_rejection greater 128
+
       texture_unit
       {{
         texture {image_filename}

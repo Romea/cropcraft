@@ -72,9 +72,6 @@ def make_transparent(obj: bpy.types.Object):
                             material with a node tree containing both
                             a Principled BSDF node and an image texture node.
     """
-    if obj.type != "MESH":
-        return
-
     material = obj.active_material
     if material is None or material.node_tree is None:
         return
