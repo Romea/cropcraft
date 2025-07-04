@@ -44,9 +44,13 @@ def main(argv: list):
     configure_random_seed(field)
     core.base.create_blender_context()
     
-    beds = core.beds.Beds(field)
-    beds.load_plants()
-    beds.create_beds()
+    try:
+        beds = core.beds.Beds(field)
+        beds.load_plants()
+        beds.create_beds()
+    except RuntimeError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        exit(2)
 
     ground = core.ground.Ground(field, beds)
     ground.load_weeds(beds.plant_mgr)

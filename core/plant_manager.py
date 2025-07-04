@@ -21,7 +21,7 @@ from . import input_utils
 class PlantModel:
     filename: str
     height: float
-    filepath: str = None
+    filepath: str | None = None
     width: float = 0.0
     leaf_area: float = 0.0
 
@@ -69,7 +69,7 @@ class PlantManager:
 
     def get_model_list_by_height(
         self, type: str, height: float, tolerance_coeff
-    ) -> typing.List[PlantModel]:
+    ) -> typing.List[PlantModel] | None:
         if type not in self.plant_groups:
             return None
 

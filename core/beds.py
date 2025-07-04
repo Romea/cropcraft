@@ -30,35 +30,42 @@ class Beds:
         self.center_pos = mathutils.Vector()
         self.width = 0.0
         self.length = 0.0
-        self.assets_path = os.path.abspath('assets')
+        self.assets_path = os.path.abspath("assets")
         self.rand = random.Random(random.getrandbits(32))
         self.plant_mgr = PlantManager()
         self.orientation_fns = {
-            'random': lambda: self.rand.uniform(0, math.tau),
-            'aligned': lambda: self.rand.choice([0.0, math.pi]),
-            'zero': lambda: 0.0,
+            "random": lambda: self.rand.uniform(0, math.tau),
+            "aligned": lambda: self.rand.choice([0.0, math.pi]),
+            "zero": lambda: 0.0,
         }
 
     def load_plants(self):
         groups = {}
         for bed in self.field.beds:
-            models = self.plant_mgr.get_model_list_by_height(bed.plant_type, bed.plant_height, bed.height_tolerance_coeff)
+            models = self.plant_mgr.get_model_list_by_height(
+                bed.plant_type, bed.plant_height, bed.height_tolerance_coeff
+            )
 
             if not models:
                 raise RuntimeError(
-                    "Error: plant type '{}' and height '{}' with tolerance '{}' is unknown.".format(
-                        bed.plant_type, bed.plant_height, bed.height_tolerance_coeff
+                    "{} '{}': {}:\n\ttype: {},\n\theight: {}m,\n\theight tolerance: {}%.".format(
+                        "fail to create bed",
+                        bed.name,
+                        "no plant models match the desired parameters",
+                        bed.plant_type,
+                        bed.plant_height,
+                        bed.height_tolerance_coeff * 100.,
                     )
                 )
 
             groups[bed.name] = models
             self.bed_plant_groups[bed.name] = (bed.plant_type, models)
 
-        plants_collection = bpy.data.collections['plants']
+        plants_collection = bpy.data.collections["plants"]
 
         view_layer = bpy.context.view_layer
         scene_layer_coll = view_layer.layer_collection
-        plants_layer_coll = scene_layer_coll.children['resources'].children['plants']
+        plants_layer_coll = scene_layer_coll.children["resources"].children["plants"]
 
         for group_name, models in groups.items():
             collection = bpy.data.collections.new(group_name)
@@ -72,7 +79,7 @@ class Beds:
     def create_beds(self):
         self.field.state = config.FieldState(beds=[])
 
-        collection = bpy.data.collections['generated']
+        collection = bpy.data.collections["generated"]
 
         for bed in self.field.beds:
             bed_object = self._create_bed(bed)
@@ -91,8 +98,10 @@ class Beds:
         rotations = []
         indexes = []
 
-        plant_models = self.plant_mgr.get_model_list_by_height(bed.plant_type, bed.plant_height, bed.height_tolerance_coeff)
-        if (not plant_models):
+        plant_models = self.plant_mgr.get_model_list_by_height(
+            bed.plant_type, bed.plant_height, bed.height_tolerance_coeff
+        )
+        if not plant_models:
             raise RuntimeError(
                 "Error: plant type '{}' and height '{}' with tolerance '{}' is unknown.".format(
                     bed.plant_type, bed.plant_height, bed.height_tolerance_coeff
@@ -172,22 +181,22 @@ class Beds:
         mesh.from_pydata(vertices, edges=[], faces=[])
         mesh.update()
 
-        scale_attr = mesh.attributes.new('scale', type='FLOAT', domain='POINT')
-        scale_attr.data.foreach_set('value', scales)
-        rotation_attr = mesh.attributes.new('rotation', type='FLOAT_VECTOR', domain='POINT')
-        rotation_attr.data.foreach_set('vector', rotations)
-        index_attr = mesh.attributes.new('index', type='INT', domain='POINT')
-        index_attr.data.foreach_set('value', indexes)
+        scale_attr = mesh.attributes.new("scale", type="FLOAT", domain="POINT")
+        scale_attr.data.foreach_set("value", scales)
+        rotation_attr = mesh.attributes.new("rotation", type="FLOAT_VECTOR", domain="POINT")
+        rotation_attr.data.foreach_set("vector", rotations)
+        index_attr = mesh.attributes.new("index", type="INT", domain="POINT")
+        index_attr.data.foreach_set("value", indexes)
 
         object = bpy.data.objects.new(name, mesh)
 
         # add and configure geometry nodes
-        modifier = object.modifiers.new(name, 'NODES')
-        modifier.node_group = bpy.data.node_groups['crops']
+        modifier = object.modifiers.new(name, "NODES")
+        modifier.node_group = bpy.data.node_groups["crops"]
 
         collection_name = name
         plant_collection = bpy.data.collections[collection_name]
-        modifier['Socket_2'] = plant_collection
+        modifier["Socket_2"] = plant_collection
 
         # apply plant material to the bed object
         active_material = plant_collection.objects[0].active_material
