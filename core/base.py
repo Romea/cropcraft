@@ -93,6 +93,7 @@ def create_environment():
     env_collection = bpy.data.collections.get("env")
     if env_collection:
         sun_light_data = bpy.data.lights.new(name="sun", type="SUN")
+        sun_light_data.color = (1.0, 0.98, 0.86)
         sun_light = bpy.data.objects.new(name="sun", object_data=sun_light_data)
         sun_light.data = sun_light_data
         env_collection.objects.link(sun_light)

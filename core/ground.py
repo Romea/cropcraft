@@ -13,9 +13,8 @@
 import os
 import bpy
 import random
-import itertools
 
-from . import config, input_utils
+from . import config
 from .beds import Beds
 from .model_import import obj_import
 from .plant_manager import PlantManager
@@ -23,10 +22,10 @@ from .plant_manager import PlantManager
 
 def create_plane_object(name: str, width: float, length: float, offset: float):
     vertices = [
-        (-offset, -offset, 0.),
-        (length + offset, -offset, 0.),
-        (length + offset, width + offset, 0.),
-        (-offset, width + offset, 0.),
+        (-offset, -offset, 0.0),
+        (length + offset, -offset, 0.0),
+        (length + offset, width + offset, 0.0),
+        (-offset, width + offset, 0.0),
     ]
     edges = [(0, 1), (1, 2), (2, 3), (3, 0)]
     faces = [(0, 1, 2, 3)]
@@ -39,19 +38,18 @@ def create_plane_object(name: str, width: float, length: float, offset: float):
 
 
 class Ground:
-
     def __init__(self, field: config.Field, beds: Beds):
         self.field = field
         self.beds = beds
-        self.assets_path = os.path.abspath('assets')
+        self.assets_path = os.path.abspath("assets")
         self.rand = random.Random(random.getrandbits(32))
 
     def load_weeds(self, plant_manager: PlantManager):
-        weeds_collection = bpy.data.collections['weeds']
+        weeds_collection = bpy.data.collections["weeds"]
 
         view_layer = bpy.context.view_layer
         scene_layer_coll = view_layer.layer_collection
-        weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
+        weeds_layer_coll = scene_layer_coll.children["resources"].children["weeds"]
 
         selected_weed_types_height = [(w.plant_type, w.max_height) for w in self.field.weeds]
 
@@ -66,46 +64,38 @@ class Ground:
             for model in plant_group:
                 view_layer.active_layer_collection = group_layer_coll
                 obj_import(model.filepath)
-            
 
     def load_stones(self):
         view_layer = bpy.context.view_layer
         scene_layer_coll = view_layer.layer_collection
-        stones_layer_coll = scene_layer_coll.children['resources'].children['stones']
+        stones_layer_coll = scene_layer_coll.children["resources"].children["stones"]
 
-        stones_path = os.path.join(self.assets_path, 'stones')
-        models = filter(lambda x: x.endswith('.obj'), os.listdir(stones_path))
+        stones_path = os.path.join(self.assets_path, "stones")
+        models = filter(lambda x: x.endswith(".obj"), os.listdir(stones_path))
 
         for model in models:
             view_layer.active_layer_collection = stones_layer_coll
             obj_import(os.path.join(stones_path, model))
 
     def create_plane(self):
-        object = create_plane_object('ground', self.beds.width, self.beds.length,
-                                     self.field.headland_width)
+        object = create_plane_object(
+            "ground", self.beds.width, self.beds.length, self.field.headland_width
+        )
 
-        # create material
-        mat = bpy.data.materials.new('ground')
-        mat.use_nodes = True
-        bsdf = mat.node_tree.nodes["Principled BSDF"]
-        tex_img = mat.node_tree.nodes.new('ShaderNodeTexImage')
-        tex_img.image = bpy.data.images.load(os.path.realpath(os.path.join(self.assets_path, 'textures', 'dirt.jpg')))
-        mat.node_tree.links.new(bsdf.inputs['Base Color'], tex_img.outputs['Color'])
-        bsdf.inputs['Roughness'].default_value = 0.9
-        object.active_material = mat
+        object.active_material = self.create_material()
 
         # create UV
         view_layer = bpy.context.view_layer
-        view_layer.active_layer_collection = view_layer.layer_collection.children['resources']
+        view_layer.active_layer_collection = view_layer.layer_collection.children["resources"]
         bpy.ops.mesh.primitive_plane_add()
-        uv_object = bpy.data.objects['Plane']
-        uv_object.name = 'uv_project'
-        object.data.uv_layers.new(name='UVMap')
-        uv_modifier = object.modifiers.new('UV', 'UV_PROJECT')
-        uv_modifier.uv_layer = 'UVMap'
+        uv_object = bpy.data.objects["Plane"]
+        uv_object.name = "uv_project"
+        object.data.uv_layers.new(name="UVMap")
+        uv_modifier = object.modifiers.new("UV", "UV_PROJECT")
+        uv_modifier.uv_layer = "UVMap"
         uv_modifier.projectors[0].object = uv_object
 
-        collection = bpy.data.collections['generated']
+        collection = bpy.data.collections["generated"]
         collection.objects.link(object)
 
     def create_weeds(self):
@@ -116,33 +106,34 @@ class Ground:
             self.create_weed(weed)
 
     def create_weed(self, weed: config.Weed):
-        object = create_plane_object(weed.name, self.beds.width, self.beds.length,
-                                     self.field.scattering_extra_width)
+        object = create_plane_object(
+            weed.name, self.beds.width, self.beds.length, self.field.scattering_extra_width
+        )
         weed_collection = bpy.data.collections[weed.plant_type]
 
-        object.modifiers.new('grid', 'REMESH')
+        object.modifiers.new("grid", "REMESH")
 
-        node = object.modifiers.new(weed.name, 'NODES')
-        if weed.scattering_mode == 'noise':
-            node.node_group = bpy.data.node_groups['scattering']
-        else: #weed.scattering_mode == 'image':
-            node.node_group = bpy.data.node_groups['scattering_from_image']
+        node = object.modifiers.new(weed.name, "NODES")
+        if weed.scattering_mode == "noise":
+            node.node_group = bpy.data.node_groups["scattering"]
+        else:  # weed.scattering_mode == 'image':
+            node.node_group = bpy.data.node_groups["scattering_from_image"]
 
-        node['Socket_3'] = weed_collection
-        node['Socket_4'] = self.rand.randint(-10000, 10000)
-        node['Socket_5'] = weed.distance_min
-        node['Socket_6'] = weed.density
-        if weed.scattering_mode == 'noise':
-            node['Socket_7'] = weed.noise_scale
-            node['Socket_8'] = weed.noise_offset
-        else: #weed.scattering_mode == 'image':
-            node['Socket_9'] = bpy.data.images.load(weed.scattering_img, check_existing=True)
+        node["Socket_3"] = weed_collection
+        node["Socket_4"] = self.rand.randint(-10000, 10000)
+        node["Socket_5"] = weed.distance_min
+        node["Socket_6"] = weed.density
+        if weed.scattering_mode == "noise":
+            node["Socket_7"] = weed.noise_scale
+            node["Socket_8"] = weed.noise_offset
+        else:  # weed.scattering_mode == 'image':
+            node["Socket_9"] = bpy.data.images.load(weed.scattering_img, check_existing=True)
 
         # apply instance material to the object
         for material in weed_collection.objects[0].data.materials:
             object.data.materials.append(material.copy())
 
-        collection = bpy.data.collections['generated']
+        collection = bpy.data.collections["generated"]
         collection.objects.link(object)
 
     def create_stones(self):
@@ -151,24 +142,64 @@ class Ground:
 
         stones = self.field.stones
 
-        object = create_plane_object('stones', self.beds.width, self.beds.length,
-                                     self.field.scattering_extra_width)
-        stones_collection = bpy.data.collections['stones']
+        object = create_plane_object(
+            "stones", self.beds.width, self.beds.length, self.field.scattering_extra_width
+        )
+        stones_collection = bpy.data.collections["stones"]
 
-        object.modifiers.new('grid', 'REMESH')
+        object.modifiers.new("grid", "REMESH")
 
-        node = object.modifiers.new('stones', 'NODES')
-        node.node_group = bpy.data.node_groups['stones_scattering']
-        node['Socket_2'] = stones_collection
-        node['Socket_3'] = self.rand.randint(-10000, 10000)
-        node['Socket_4'] = stones.distance_min
-        node['Socket_5'] = stones.density
-        node['Socket_6'] = stones.noise_scale
-        node['Socket_7'] = stones.noise_offset
+        node = object.modifiers.new("stones", "NODES")
+        node.node_group = bpy.data.node_groups["stones_scattering"]
+        node["Socket_2"] = stones_collection
+        node["Socket_3"] = self.rand.randint(-10000, 10000)
+        node["Socket_4"] = stones.distance_min
+        node["Socket_5"] = stones.density
+        node["Socket_6"] = stones.noise_scale
+        node["Socket_7"] = stones.noise_offset
 
         # apply instance material to the object
         for material in stones_collection.objects[0].data.materials:
             object.data.materials.append(material.copy())
 
-        collection = bpy.data.collections['generated']
+        collection = bpy.data.collections["generated"]
         collection.objects.link(object)
+
+    def create_material(self) -> bpy.types.Material:
+        mat = bpy.data.materials.new("ground")
+        mat.use_nodes = True
+        nodes = mat.node_tree.nodes
+
+        bsdf = nodes["Principled BSDF"]
+        bsdf.inputs["Roughness"].default_value = 0.9
+        
+        out = nodes["Material Output"]
+
+        diff_tex = self.create_tex_image(nodes, "dry_mud_field_001_diff_2k.jpg")
+        rough_tex = self.create_tex_image(nodes, "dry_mud_field_001_rough_2k.jpg", non_color=True)
+        nor_tex = self.create_tex_image(nodes, "dry_mud_field_001_nor_gl_2k.exr", non_color=True)
+        disp_tex = self.create_tex_image(nodes, "dry_mud_field_001_disp_2k.png", non_color=True)
+
+        nor_map = nodes.new("ShaderNodeNormalMap")
+        disp = nodes.new("ShaderNodeDisplacement")
+
+        links = mat.node_tree.links
+        links.new(bsdf.inputs["Base Color"], diff_tex.outputs["Color"])
+        links.new(bsdf.inputs["Roughness"], rough_tex.outputs["Color"])
+        links.new(bsdf.inputs["Normal"], nor_map.outputs["Normal"])
+        links.new(nor_map.inputs["Color"], nor_tex.outputs["Color"])
+        links.new(disp.inputs["Height"], disp_tex.outputs["Color"])
+        links.new(out.inputs["Displacement"], disp.outputs["Displacement"])
+
+        return mat
+
+    def create_tex_image(self, nodes: bpy.types.Nodes, img_name: str, non_color=False):
+        tex = nodes.new("ShaderNodeTexImage")
+        tex.image = bpy.data.images.load(
+            os.path.realpath(os.path.join(self.assets_path, "textures", img_name))
+        )
+
+        if non_color:
+            tex.image.colorspace_settings.name = "Non-Color"
+
+        return tex
