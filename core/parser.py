@@ -69,8 +69,6 @@ def make_bed(name: str, data: dict, default=config.Bed(), allow_none=False):
         if not allow_none and bed.plants_count is None:
             error("unable to dertemine number of plants. Specify 'plant_count' or 'length'.")
 
-    print(f"plants count: {bed.plants_count}")
-
     return bed
 
 
