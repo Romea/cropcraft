@@ -25,6 +25,10 @@ def create_blender_context():
     create_environment()
 
     bpy.context.scene.render.engine = "CYCLES"
+    bpy.context.scene.cycles.device = "GPU"
+
+    # enable scene lights for material preview
+    bpy.data.screens["Layout"].areas[3].spaces[0].shading.use_scene_lights = True
 
 
 def remove_all():
@@ -92,11 +96,14 @@ def create_environment():
     # Add sun light to the "env" collection
     env_collection = bpy.data.collections.get("env")
     if env_collection:
+        sun_elevation = 30  # degrees
+        sun_rotation = 47  # degrees
+
         sun_light_data = bpy.data.lights.new(name="sun", type="SUN")
-        sun_light_data.color = (1.0, 0.98, 0.86)
+        sun_light_data.color = (1.0, 0.954, 0.755)
         sun_light = bpy.data.objects.new(name="sun", object_data=sun_light_data)
         sun_light.data = sun_light_data
         env_collection.objects.link(sun_light)
 
-        sun_light.data.energy = 4.0
-        sun_light.rotation_euler = (-30 * to_radians, -10 * to_radians, 0)
+        sun_light.data.energy = 13.0
+        sun_light.rotation_euler = ((sun_elevation - 90) * to_radians, 0, sun_rotation * to_radians)
