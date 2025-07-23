@@ -60,7 +60,7 @@ class Ground:
             plant_group = plant_manager.get_model_list_by_height(weed_type, weed_height / 2.0, 1)
             if not plant_group:
                 raise RuntimeError(
-                    f"Error: plant type '{weed_type}' with hight under {weed_height} is unknown.")
+                    f"Error: plant type '{weed_type}' with height under {weed_height} is unknown.")
 
 
             collection = bpy.data.collections.new(weed_name)
