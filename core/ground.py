@@ -53,15 +53,19 @@ class Ground:
         scene_layer_coll = view_layer.layer_collection
         weeds_layer_coll = scene_layer_coll.children['resources'].children['weeds']
 
-        selected_weed_types_height = [(w.plant_type, w.max_height) for w in self.field.weeds]
+        selected_weed_types_height = [(w.plant_type, w.name, w.max_height) for w in self.field.weeds]
 
-        for weed_type, weed_height in selected_weed_types_height:
+        for weed_type, weed_name, weed_height in selected_weed_types_height:
             # get models from 0 to max_height
             plant_group = plant_manager.get_model_list_by_height(weed_type, weed_height / 2.0, 1)
+            if not plant_group:
+                raise RuntimeError(
+                    f"Error: plant type '{weed_type}' with hight under {weed_height} is unknown.")
 
-            collection = bpy.data.collections.new(weed_type)
+
+            collection = bpy.data.collections.new(weed_name)
             weeds_collection.children.link(collection)
-            group_layer_coll = weeds_layer_coll.children[weed_type]
+            group_layer_coll = weeds_layer_coll.children[weed_name]
 
             for model in plant_group:
                 view_layer.active_layer_collection = group_layer_coll
@@ -118,7 +122,7 @@ class Ground:
     def create_weed(self, weed: config.Weed):
         object = create_plane_object(weed.name, self.beds.width, self.beds.length,
                                      self.field.scattering_extra_width)
-        weed_collection = bpy.data.collections[weed.plant_type]
+        weed_collection = bpy.data.collections[weed.name]
 
         object.modifiers.new('grid', 'REMESH')
 
