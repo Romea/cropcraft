@@ -36,11 +36,12 @@ class GazeboModel:
     path: str = None
     author: str = None
     use_absolute_path: bool = None
+    ignition_mode: bool = None
 
     def export(self, output_dir: str, field: config.Field):
         path = os.path.join(output_dir, self.path)
 
-        model = gazebo.GazeboModel(path, self.name, self.author, self.use_absolute_path)
+        model = gazebo.GazeboModel(path, self.name, self.author, self.use_absolute_path, self.ignition_mode)
         model.export_field(field)
         model.generate_sdf()
         model.generate_config()

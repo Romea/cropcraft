@@ -303,12 +303,15 @@ out3:
   name: maize_field
   author: John Smith
   use_absolute_path: false
+  ignition_mode: false
 ```
 
 * `name`: name (and optionally a relative path) of the gazebo model directory to create
 * `author` (optional): a string to add in the author field of the model config file
 * `use_absolute_path` (optional, default: false): a boolean to enable/disable use of absolute path
   for resources used in the SDF file.
+* `ignition_mode` (optional, default: false): a boolean to enable/disable SDF file for Gazebo Classic
+  or Gazebo Ignition/Sim
 
 #### Output type `field_description`
 
