@@ -16,6 +16,7 @@ import os
 
 from . import gazebo
 from . import config
+from . import mesh
 from .field_description import FieldDescription
 
 
@@ -47,20 +48,6 @@ class GazeboModel:
 
 
 @dataclass
-class USDFile:
-    filename: str = None
-
-    def export(self, output_dir: str, field: config.Field):
-        filepath = os.path.join(output_dir, self.filename)
-
-        bpy.ops.file.pack_all()
-        bpy.ops.wm.usd_export(
-            filepath=filepath,
-            collection="generated"
-        )
-
-
-@dataclass
 class Description:
     filename: str = None
     format: str = None
@@ -70,3 +57,37 @@ class Description:
 
         description = FieldDescription(field)
         description.dump(filepath, self.format)
+
+
+class Mesh:
+    def __init__(self) -> None:
+        self._filename = None
+        self._extension = None
+
+    def export(self, output_dir: str, field: config.Field):
+        filepath = os.path.join(output_dir, self.filename)
+        _, extension = os.path.splitext(filepath)
+
+        bpy.ops.file.pack_all()
+        mesh.export_from_extension(extension, filepath, use_selection=False)
+
+    @property
+    def filename(self):
+        return self._filename
+
+    @filename.setter
+    def filename(self, name):
+        self._filename = name
+        _, self._extension = os.path.splitext(self._filename)
+
+        if not self._extension:
+            raise ValueError(f"No extension provided on mesh file '{self._filename}")
+
+        if not mesh.extension_is_known(self._extension):
+            raise ValueError(
+                f"Unknown extension '{self._extension}' for filename '{self._filename}'"
+            )
+
+    @property
+    def extension(self):
+        return self._extension

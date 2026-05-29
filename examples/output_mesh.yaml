@@ -1,0 +1,69 @@
+output:
+  blender:
+    type: blender_file
+    filename: output.blend
+  gazebo:
+    type: gazebo_model
+    name: output_gazebo
+  description:
+    type: field_description
+    filename: output_description.mpk
+  usd:
+    type: mesh
+    filename: output.usd
+  usda:
+    type: mesh
+    filename: output.usda
+  usdc:
+    type: mesh
+    filename: output.usdc
+  usdz:
+    type: mesh
+    filename: output.usdz
+  obj:
+    type: mesh
+    filename: output.obj
+  glb:
+    type: mesh
+    filename: output.glb
+  gltf:
+    type: mesh
+    filename: output.gltf
+  stl:
+    type: mesh
+    filename: output.stl
+
+field:
+  headland_width: 1.
+  bed_width: 1.57
+  plants_count: 20
+  beds_count: 1
+  plant_distance: .15
+
+  beds:
+    bed1:  
+      plant_type: bean
+      plant_height: .12
+      row_distance: .4
+      rows_count: 3
+    bed2:  
+      plant_type: maize
+      plant_height: .40
+      row_distance: .785
+      rows_count: 2
+
+  noise:
+    position: .008
+    tilt: .05
+    missing: .15
+    scale: .10
+
+  weeds:
+    portulaca:
+      plant_type: portulaca
+      max_height: 0.02
+      density: 2.
+
+  stones:
+    density: 50.
+    noise_scale: 0.24

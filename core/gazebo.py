@@ -16,6 +16,7 @@ from xml.dom import minidom
 import os
 
 from . import config
+from . import mesh as mesh_exporter
 
 
 class GazeboModel:
@@ -49,17 +50,8 @@ class GazeboModel:
 
     def export_object(self, name: str, object: bpy.types.Object):
         filepath = os.path.join(self.meshes_path, name)
-
         object.select_set(True)
-        bpy.ops.wm.obj_export(
-            filepath=filepath + '.obj',
-            check_existing=False,
-            apply_modifiers=True,
-            up_axis='Z',
-            forward_axis='Y',
-            export_selected_objects=True,
-            export_materials=False,
-        )
+        mesh_exporter.export_obj(filepath + '.obj', use_selection=True)
         object.select_set(False)
 
     def export_image(self, name: str):
