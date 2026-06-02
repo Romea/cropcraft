@@ -15,6 +15,7 @@ import bpy
 import os
 
 from . import gazebo
+from . import gazebo_ignition
 from . import config
 from . import mesh
 from .field_description import FieldDescription
@@ -42,6 +43,24 @@ class GazeboModel:
         path = os.path.join(output_dir, self.path)
 
         model = gazebo.GazeboModel(path, self.name, self.author, self.use_absolute_path)
+        model.export_field(field)
+        model.generate_sdf()
+        model.generate_config()
+
+
+@dataclass
+class GazeboIgnitionModel:
+    name: str = None
+    path: str = None
+    author: str = None
+    use_absolute_path: bool = None
+
+    def export(self, output_dir: str, field: config.Field):
+        path = os.path.join(output_dir, self.path)
+
+        model = gazebo_ignition.GazeboIgnitionModel(
+            path, self.name, self.author, self.use_absolute_path
+        )
         model.export_field(field)
         model.generate_sdf()
         model.generate_config()

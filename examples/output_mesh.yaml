@@ -1,3 +1,4 @@
+output_enabled: [gazebo_ignition]
 output:
   blender:
     type: blender_file
@@ -5,6 +6,9 @@ output:
   gazebo:
     type: gazebo_model
     name: output_gazebo
+  gazebo_ignition:
+    type: gazebo_ignition_model
+    name: output_gazebo_ignition
   description:
     type: field_description
     filename: output_description.mpk
