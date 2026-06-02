@@ -48,11 +48,13 @@ class GazeboIgnitionModel:
         relpath = os.path.relpath(filepath, os.path.dirname(self.model_path))
         return f"model://{relpath}"
 
-    def export_object(self, name: str, object: bpy.types.Object):
-        filepath = os.path.join(self.meshes_path, name)
+    def export_object(self, name: str, object: bpy.types.Object, mesh_extension):
+        filepath = os.path.join(self.meshes_path, name) + mesh_extension
         object.select_set(True)
-        mesh_exporter.export_obj(filepath + ".obj", use_selection=True)
+        # mesh_exporter.export_obj(filepath + ".obj", use_selection=True)
+        mesh_exporter.export_from_extension(mesh_extension, filepath, use_selection=True)
         object.select_set(False)
+        return filepath
 
     def export_image(self, name: str):
         image_path = os.path.join(self.materials_path, name)
@@ -61,32 +63,10 @@ class GazeboIgnitionModel:
             image = bpy.data.images[name]
             image.save(filepath=image_path)
 
-    def create_sdf_material(self, visual: ET.Element, object: bpy.types.Object):
-        # grab diffuse/albedo map
-        diffuse_map = None
-        if object.active_material and object.active_material.node_tree:
-            nodes = object.active_material.node_tree.nodes
-            principled = next(n for n in nodes if n.type == "BSDF_PRINCIPLED")
-            if principled is not None:
-                base_color = principled.inputs["Base Color"]  # Or principled.inputs[0]
-                if len(base_color.links):
-                    link_node = base_color.links[0].from_node
-                    diffuse_map = link_node.image.name
-
-        material_filepath = os.path.join(self.materials_path, object.name + ".material")
-
-        if diffuse_map:
-            self.export_image(diffuse_map)
-            self.append_ogre_material(object.name, material_filepath, diffuse_map)
-
-        # setup diffuse/specular color
-        material = ET.SubElement(visual, "material")
-        script = ET.SubElement(material, "script")
-        ET.SubElement(script, "uri").text = self.make_uri(material_filepath)
-        ET.SubElement(script, "name").text = object.name
-
-    def create_sdf_link(self, object: bpy.types.Object, collision_enabled=False, retro_laser=0.0):
-        mesh_path = os.path.join(self.meshes_path, object.name + ".obj")
+    def create_sdf_link(
+        self, object: bpy.types.Object, mesh_extension, collision_enabled=False, retro_laser=0.0
+    ):
+        mesh_path = os.path.join(self.meshes_path, object.name + mesh_extension)
 
         link = ET.SubElement(self.model, "link", attrib={"name": object.name})
 
@@ -94,8 +74,6 @@ class GazeboIgnitionModel:
         geometry = ET.SubElement(visual, "geometry")
         mesh = ET.SubElement(geometry, "mesh")
         ET.SubElement(mesh, "uri").text = self.make_uri(mesh_path)
-
-        # self.create_sdf_material(visual, object)
 
         # sdf collision tags
         collision = ET.SubElement(link, "collision", attrib={"name": "collision"})
@@ -131,23 +109,31 @@ class GazeboIgnitionModel:
             object.select_set(False)
 
         ground = bpy.data.objects["ground"]
-        self.export_object("ground", ground)
-        self.create_sdf_link(ground, collision_enabled=True, retro_laser=0.0)
+        mesh_extension = ".glb"
+        self.export_object("ground", ground, mesh_extension)
+        self.create_sdf_link(ground, mesh_extension, collision_enabled=True, retro_laser=0.0)
 
         for index, bed in enumerate(field.beds):
             object = bpy.data.objects[bed.name]
-            self.export_object(bed.name, object)
-            self.create_sdf_link(object, collision_enabled=False, retro_laser=float(index + 1))
+            self.export_object(bed.name, object, mesh_extension)
+            self.create_sdf_link(
+                object,
+                mesh_extension,
+                collision_enabled=False,
+                retro_laser=float(index + 1),
+            )
 
         for index, weed in enumerate(field.weeds):
             object = bpy.data.objects[weed.name]
-            self.export_object(weed.name, object)
-            self.create_sdf_link(object, collision_enabled=False, retro_laser=float(-index - 1))
+            self.export_object(weed.name, object, mesh_extension)
+            self.create_sdf_link(
+                object, mesh_extension, collision_enabled=False, retro_laser=float(-index - 1)
+            )
 
         if field.stones is not None:
             stones = bpy.data.objects["stones"]
-            self.export_object("stones", stones)
-            self.create_sdf_link(stones, collision_enabled=False, retro_laser=-0.5)
+            self.export_object("stones", stones, mesh_extension)
+            self.create_sdf_link(stones, mesh_extension, collision_enabled=False, retro_laser=-0.5)
 
     def generate_sdf(self):
         xml_string = ET.tostring(self.sdf, encoding="unicode")

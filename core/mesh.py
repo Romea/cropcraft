@@ -39,6 +39,7 @@ def export_gltf(filepath, use_selection=False):
         check_existing=False,
         export_apply=True,
         export_yup=False,
+        export_gn_mesh=True,
         use_selection=use_selection,
     )
 

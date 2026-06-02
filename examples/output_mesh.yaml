@@ -1,4 +1,4 @@
-output_enabled: [gazebo_ignition]
+output_enabled: [gazebo_ignition, blender]
 output:
   blender:
     type: blender_file
