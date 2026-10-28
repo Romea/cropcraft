@@ -16,6 +16,7 @@ import random
 
 from . import config
 from .beds import Beds, _apply_emission_material
+from .geometry_nodes.compat import set_modifier_input
 from .model_import import obj_import
 from .plant_manager import PlantManager
 
@@ -122,15 +123,15 @@ class Ground:
         else:  # weed.scattering_mode == 'image':
             node.node_group = bpy.data.node_groups["scattering_from_image"]
 
-        node["Socket_3"] = weed_collection
-        node["Socket_4"] = self.rand.randint(-10000, 10000)
-        node["Socket_5"] = weed.distance_min
-        node["Socket_6"] = weed.density
+        set_modifier_input(node, "Socket_3", weed_collection)
+        set_modifier_input(node, "Socket_4", self.rand.randint(-10000, 10000))
+        set_modifier_input(node, "Socket_5", weed.distance_min)
+        set_modifier_input(node, "Socket_6", weed.density)
         if weed.scattering_mode == "noise":
-            node["Socket_7"] = weed.noise_scale
-            node["Socket_8"] = weed.noise_offset
+            set_modifier_input(node, "Socket_7", weed.noise_scale)
+            set_modifier_input(node, "Socket_8", weed.noise_offset)
         else:  # weed.scattering_mode == 'image':
-            node["Socket_9"] = bpy.data.images.load(weed.scattering_img, check_existing=True)
+            set_modifier_input(node, "Socket_9", bpy.data.images.load(weed.scattering_img, check_existing=True))
 
         # apply instance material to the object
         for material in weed_collection.objects[0].data.materials:
@@ -154,12 +155,12 @@ class Ground:
 
         node = object.modifiers.new("stones", "NODES")
         node.node_group = bpy.data.node_groups["stones_scattering"]
-        node["Socket_2"] = stones_collection
-        node["Socket_3"] = self.rand.randint(-10000, 10000)
-        node["Socket_4"] = stones.distance_min
-        node["Socket_5"] = stones.density
-        node["Socket_6"] = stones.noise_scale
-        node["Socket_7"] = stones.noise_offset
+        set_modifier_input(node, "Socket_2", stones_collection)
+        set_modifier_input(node, "Socket_3", self.rand.randint(-10000, 10000))
+        set_modifier_input(node, "Socket_4", stones.distance_min)
+        set_modifier_input(node, "Socket_5", stones.density)
+        set_modifier_input(node, "Socket_6", stones.noise_scale)
+        set_modifier_input(node, "Socket_7", stones.noise_offset)
 
         # apply instance material to the object
         for material in stones_collection.objects[0].data.materials:
