@@ -23,7 +23,7 @@ field:
       rows_count: 3
     bed2:  
       plant_type: maize
-      plant_height: .40
+      plant_height: 0.2
       row_distance: .785
       rows_count: 2
 

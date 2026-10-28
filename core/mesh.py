@@ -36,6 +36,20 @@ def export_stl(filepath, use_selection=False):
 def export_gltf(filepath, use_selection=False):
     bpy.ops.export_scene.gltf(
         filepath=filepath,
+        export_format="GLTF_SEPARATE",
+        export_texture_dir="textures",
+        check_existing=False,
+        export_apply=True,
+        export_yup=False,
+        export_gn_mesh=True,
+        use_selection=use_selection,
+    )
+
+
+def export_glb(filepath, use_selection=False):
+    bpy.ops.export_scene.gltf(
+        filepath=filepath,
+        export_format="GLB",
         check_existing=False,
         export_apply=True,
         export_yup=False,
@@ -50,7 +64,7 @@ _export_from_extension = {
     ".usda": export_usd,
     ".usdc": export_usd,
     ".usdz": export_usd,
-    ".glb": export_gltf,
+    ".glb": export_glb,
     ".gltf": export_gltf,
     ".stl": export_stl,
 }
