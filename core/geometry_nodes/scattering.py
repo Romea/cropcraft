@@ -12,6 +12,9 @@
 
 import bpy
 
+from .compat import configure_random_value
+
+
 def scattering_node_group():
     scattering = bpy.data.node_groups.new(type='GeometryNodeTree', name="scattering")
 
@@ -21,23 +24,8 @@ def scattering_node_group():
     # node Random Value.001
     random_value_001 = scattering.nodes.new("FunctionNodeRandomValue")
     random_value_001.name = "Random Value.001"
-    random_value_001.data_type = 'FLOAT'
-    # Min
-    random_value_001.inputs[0].default_value = (0.0, 0.0, 0.0)
-    # Max
-    random_value_001.inputs[1].default_value = (0.0, 0.0, 6.283199787139893)
-    # Min_001
-    random_value_001.inputs[2].default_value = 0.699999988079071
-    # Max_001
-    random_value_001.inputs[3].default_value = 1.0
-    # Min_002
-    random_value_001.inputs[4].default_value = 0
-    # Max_002
-    random_value_001.inputs[5].default_value = 100
-    # Probability
-    random_value_001.inputs[6].default_value = 0.5
-    # ID
-    random_value_001.inputs[7].default_value = 0
+    random_value_001_output = configure_random_value(
+        random_value_001, 'FLOAT', 0.699999988079071, 1.0)
 
     # node Collection Info
     collection_info = scattering.nodes.new("GeometryNodeCollectionInfo")
@@ -51,23 +39,10 @@ def scattering_node_group():
     # node Random Value
     random_value = scattering.nodes.new("FunctionNodeRandomValue")
     random_value.name = "Random Value"
-    random_value.data_type = 'FLOAT_VECTOR'
-    # Min
-    random_value.inputs[0].default_value = (-0.10000000149011612, -0.10000000149011612, 0.0)
-    # Max
-    random_value.inputs[1].default_value = (0.10000000149011612, 0.10000000149011612, 6.283199787139893)
-    # Min_001
-    random_value.inputs[2].default_value = 0.0
-    # Max_001
-    random_value.inputs[3].default_value = 1.0
-    # Min_002
-    random_value.inputs[4].default_value = 0
-    # Max_002
-    random_value.inputs[5].default_value = 100
-    # Probability
-    random_value.inputs[6].default_value = 0.5
-    # ID
-    random_value.inputs[7].default_value = 0
+    random_value_output = configure_random_value(
+        random_value, 'FLOAT_VECTOR',
+        (-0.10000000149011612, -0.10000000149011612, 0.0),
+        (0.10000000149011612, 0.10000000149011612, 6.283199787139893))
 
     # node Realize Instances
     realize_instances = scattering.nodes.new("GeometryNodeRealizeInstances")
@@ -241,9 +216,9 @@ def scattering_node_group():
     # collection_info.Instances -> instance_on_points.Instance
     scattering.links.new(collection_info.outputs[0], instance_on_points.inputs[2])
     # random_value.Value -> instance_on_points.Rotation
-    scattering.links.new(random_value.outputs[0], instance_on_points.inputs[5])
+    scattering.links.new(random_value_output, instance_on_points.inputs[5])
     # random_value_001.Value -> instance_on_points.Scale
-    scattering.links.new(random_value_001.outputs[1], instance_on_points.inputs[6])
+    scattering.links.new(random_value_001_output, instance_on_points.inputs[6])
     # group_input.Seed -> distribute_points_on_faces.Seed
     scattering.links.new(group_input.outputs[3], distribute_points_on_faces.inputs[6])
     # group_input.Distance Min -> distribute_points_on_faces.Distance Min
@@ -259,9 +234,9 @@ def scattering_node_group():
     # group_input_001.Collection -> collection_info.Collection
     scattering.links.new(group_input_001.outputs[2], collection_info.inputs[0])
     # group_input_001.Seed -> random_value_001.Seed
-    scattering.links.new(group_input_001.outputs[3], random_value_001.inputs[8])
+    scattering.links.new(group_input_001.outputs[3], random_value_001.inputs["Seed"])
     # group_input_001.Seed -> random_value.Seed
-    scattering.links.new(group_input_001.outputs[3], random_value.inputs[8])
+    scattering.links.new(group_input_001.outputs[3], random_value.inputs["Seed"])
     # group_input_002.Seed -> noise_texture.W
     scattering.links.new(group_input_002.outputs[3], noise_texture.inputs[1])
     # group_input.Density -> distribute_points_on_faces.Density Max

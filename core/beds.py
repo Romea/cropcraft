@@ -18,6 +18,7 @@ import math
 
 from .plant_manager import PlantManager
 from . import config
+from .geometry_nodes.compat import set_modifier_input
 from .model_import import obj_import
 
 
@@ -239,7 +240,7 @@ class Beds:
 
         collection_name = name
         plant_collection = bpy.data.collections[collection_name]
-        modifier["Socket_2"] = plant_collection
+        set_modifier_input(modifier, "Socket_2", plant_collection)
 
         # apply plant material to the bed object
         active_material = plant_collection.objects[0].active_material
