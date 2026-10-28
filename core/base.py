@@ -34,7 +34,12 @@ def create_blender_context(env_path=None, env_rotation_deg=0.0):
     bpy.context.scene.cycles.device = "GPU"
 
     # enable scene lights for material preview
-    bpy.data.screens["Layout"].areas[3].spaces[0].shading.use_scene_lights = True
+    for area in bpy.context.screen.areas:
+        if area.type == "VIEW_3D":
+            for space in area.spaces:
+                if space.type == "VIEW_3D":
+                    space.shading.use_scene_lights = True
+                    break
 
 
 def remove_all():
