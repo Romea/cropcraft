@@ -24,6 +24,13 @@ The minimal required version is `4.0`.
 Ensure that blender is launchable from the command line.
 It means that blender must be accessible using the `PATH` environment variable.
 
+If Blender is not in your `PATH`, you can optionally set the `CROPCRAFT_BLENDER`
+environment variable to the path of the Blender executable:
+```
+CROPCRAFT_BLENDER=/path/to/blender python cropcraft.py examples/test1.yaml
+```
+When this variable is not set, CropCraft uses `blender` from the `PATH`.
+
 You also need to install some python requirements:
 ```
 pip install -r requirements.txt

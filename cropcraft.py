@@ -37,7 +37,10 @@ def main(config_file, output_dir, foreground):
 
     os.chdir(project_path)
 
-    blender_cmd = ['blender']
+    blender_executable = os.path.expanduser(
+        os.environ.get('CROPCRAFT_BLENDER') or 'blender'
+    )
+    blender_cmd = [blender_executable]
     if not foreground:
         blender_cmd.append('--background')
     blender_cmd += [
