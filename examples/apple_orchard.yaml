@@ -1,0 +1,27 @@
+output:
+  # blender:
+  #   type: blender_file
+  #   filename: apple_orchard.blend
+
+  gazebo:
+    type: gazebo_model
+    name: apple_orchard
+    ignition_mode: true  # Enable Ignition/Gazebo Sim compatible materials
+
+field:
+  bed_width: 2.0
+  beds:
+    bed1:  
+      plant_type: apple
+      plant_height: 1.5
+      plant_distance: 1.0
+      row_distance: 2.0
+      plants_count: 10
+      rows_count: 2
+      beds_count: 1
+
+  noise:
+    position: .009
+    tilt: .05
+    missing: .17
+    scale: .08

@@ -1,0 +1,7 @@
+# Generated MTL with texture atlas
+newmtl atlas_material
+Ka 1.000 1.000 1.000
+Kd 1.000 1.000 1.000
+Ks 0.000 0.000 0.000
+map_Kd apple_tree_atlas.jpg
+

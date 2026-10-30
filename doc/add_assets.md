@@ -70,3 +70,5 @@ For each model, you have to specify the following elements:
 
 If the model is used in the `weeds` field of the configuration file, only the smallest height group
 is used.
+
+Multiple textures will not be read from the `.mtl` file properly. You should build your models either from a single texture `.jpg`, or use a script similar to that used in assets/plants/apple which corrects for this later.
